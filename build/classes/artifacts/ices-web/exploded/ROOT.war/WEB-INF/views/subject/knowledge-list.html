@@ -1,0 +1,91 @@
+#parse("/header.html")
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl">
+    <form id="searchForm">
+        <div class="row">
+            <div class="col-xs-6 text-left">
+                科目 <select name="subjectId" class="subject-select">
+                        <option value="">--全部--</option>
+                        #foreach($sub in $subList)
+                            <option value="$sub.id">$sub.name</option>
+                        #end
+                    </select>
+            </div>
+            <div class="col-xs-6 pull-right" style="text-align: right;">
+                <button class="btn common-btn" ng-click="addKnowledge()">添加知识点</button>
+            </div>
+        </div>
+    </form>
+    <div class="row table-div">
+        <table class="table table-bordered table-long">
+            <thead>
+                <th style="width: 6%;">序号</th>
+                <th style="width: 20%;">科目名称</th>
+                <th style="width: 20%;">知识点</th>
+                <th style="width: 24%;">备注说明</th>
+                <th style="width: 20%;">创建时间</th>
+                <th style="width: 10%;">操作</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="obj in modelEntrys.bizData.rows" data-id="{{obj.id}}">
+                    <td>{{modelEntrys.bizData.pagesize*(modelEntrys.bizData.page-1)+$index+1}}</td>
+                    <td>{{obj.subjectName}}</td>
+                    <td>{{obj.name}}</td>
+                    <td>{{obj.remark}}</td>
+                    <td>{{obj.createTime}}</td>
+                    <td>
+                        <a href="javascript:void(0);" class="opt update-opt">修改</a>
+                        <a href="javascript:void(0);" class="opt delete-opt">删除</a>
+                    </td>
+                </tr>
+                <tr ng-if="modelEntrys.bizData.rows == 0">
+                    <td colspan="6" style="text-align: center;height: 60px;vertical-align: middle;font-size: 16px;">没有找到相关数据</td>
+                </tr>
+            </tbody>
+        </table>
+        <page model="modelEntrys" ajaxurl="/knowledge/pageKnowledge" formid="searchForm"></page>
+    </div>
+
+    <!--添加知识点 modal-->
+    <div class="modal fade" id="addKnowModal" tabindex="-1" role="dialog" aria-hidden="false" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">添加知识点</h4>
+                </div>
+                <div class="modal-body" style="height: 300px;padding: 20px;">
+                    <form class="form-horizontal" id="addForm">
+                        <input type="hidden" name="id" value="{{knowledge.id}}">
+                        <div class="form-group">
+                            <label class="required col-xs-2 text-right">所属科目</label>
+                            <div class="col-xs-9">
+                                <select name="subjectId" class="addknowledge-select">
+                                    <option ng-repeat="subject in subjectList" value="{{subject.id}}" ng-selected="knowledge.subjectId == subject.id">{{subject.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required col-xs-2 text-right">知识点</label>
+                            <div class="col-xs-9">
+                                <input type="text" maxlength="60" placeholder="最多60字符" name="name" class="common-input" ng-model="knowledge.name" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 text-right">备注说明</label>
+                            <div class="col-xs-9">
+                                <textarea name="remark" placeholder="最多128个字符" maxlength="128" style="width: 90%;height: 60px;"  ng-model="knowledge.remark"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn common-btn" ng-click="saveKnowledge()">保存</button>
+                    <button type="button" class="btn common-btn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal-end -->
+</div>
+#parse("/footer.html")
+<script src="/static/js/subject/knowledge.list.js"></script>

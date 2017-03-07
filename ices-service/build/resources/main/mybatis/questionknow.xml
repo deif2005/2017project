@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.IQuestionKnowDao">
+
+    <resultMap id="QuestionKnowMap" type="QuestionKnow">
+        <id property="id" column="id" />
+        <result column="question_id" property="questionId" />
+        <result column="know_id" property="knowId" />
+        <result column="name" property="knowname" />
+    </resultMap>
+
+    <sql id="baseSql">
+        id,question_id,know_id,creater,create_time
+    </sql>
+
+    <!--根据题号查询知识点信息-->
+    <select id="getQuestionKnow" resultMap="QuestionKnowMap">
+        SELECT
+            a.id,
+            a.question_id,
+            a.know_id,
+            b.name AS knowname,
+            a.creater,
+            a.create_time
+        FROM tb_question_know a
+        LEFT JOIN tb_knowledge b ON a.know_id=b.id
+        WHERE a.question_id=#{questionId}
+    </select>
+
+    <!--添加题知识点对应关系-->
+    <insert id="addQuestionKnow" parameterType="QuestionKnow">
+        INSERT INTO tb_question_know(id,question_id,know_id,
+        <if test="creater!=null and creater!=''">
+            creater,
+        </if>
+        create_time
+        )VALUES (#{id},#{questionId},#{knowId},
+        <if test="creater!=null and creater!=''">
+            #{creater},
+        </if>
+        now()
+        )
+    </insert>
+
+    <!--删除知识点信息-->
+    <delete id="delQuestionKnow" parameterType="java.lang.String">
+        DELETE FROM tb_question_know WHERE question_id=#{questionId}
+    </delete>
+
+
+    <!--复制题知识点-->
+    <insert id="copyQuestionKnowByQuestionId" parameterType="QuestionKnow">
+        INSERT INTO tb_question_know(
+            id,
+            question_id,
+            know_id,
+            creater,
+            create_time
+        )
+        SELECT
+            UUID(),
+            #{newquestionId},
+            know_id,
+            #{creater},
+            NOW()
+        FROM tb_question_know
+        WHERE question_id=#{questionId}
+    </insert>
+
+    <!--根据试卷ID查询-->
+    <select id="listQuestionKnwByPaperId" resultType="QuestionKnow">
+        SELECT <include refid="baseSql"/>  FROM tb_question_know WHERE question_id in(
+                SELECT id FROM tb_question WHERE id in(
+                         SELECT question_id FROM tb_section_question WHERE section_id in(
+                                 SELECT id FROM tb_section WHERE paper_id=#{paperId}
+                         )
+                )
+        ) ORDER  BY create_time
+    </select>
+
+    <!--批量添加-->
+    <insert id="batchAddQuestionKnow">
+        INSERT INTO tb_question_know(id,question_id,know_id,creater,create_time
+        )VALUES
+        <foreach collection="sectionQuestionsList" item="l" separator="," >
+            (
+              #{l.id},#{l.questionId},#{l.knowId},#{l.creater},now()
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByQuestionId">
+        DELETE FROM tb_question_know WHERE question_id=#{questionId}
+    </delete>
+
+    <!--根据knowId统计-->
+        <select id="countByKnowId" resultType="java.lang.Integer">
+           SELECT count(*) FROM  tb_question_know WHERE know_id=#{knowId}
+        </select>
+
+</mapper>

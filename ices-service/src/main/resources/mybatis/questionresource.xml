@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mingyu.ices.dao.IQuestionResourceDao">
+
+    <sql id="basSql">
+        id,question_id,TYPE,NAME,path,STATUS,creater,create_time,MODIFIER,modify_time
+    </sql>
+
+    <!--添加试题资源信息-->
+    <insert id="addQuestionResource" parameterType="QuestionResource">
+        INSERT INTO tb_question_resource(
+        id,question_id,
+        <if test="type!=null and type!=''">
+            type,
+        </if>
+        <if test="name!=null and name!=''">
+            name,
+        </if>
+        <if test="path!=null and path!=''">
+            path,
+        </if>
+            status,creater,create_time
+        )
+        VALUES (#{id},#{questionId},
+        <if test="type!=null and type!=''">
+            #{type},
+        </if>
+        <if test="name!=null and name!=''">
+            #{name},
+        </if>
+        <if test="path!=null and path!=''">
+            #{path},
+        </if>
+            '1', #{creater},now()
+        )
+    </insert>
+
+    <!--删除试题资源信息-->
+    <delete id="delQuestionResourceByQuestionId">
+        DELETE FROM tb_question_resource WHERE question_id=#{questionId}
+    </delete>
+
+    <!--修改试题资源-->
+    <update id="updateQuestionResource" parameterType="QuestionResource">
+        UPDATE tb_question_resource SET
+        question_id=#{questionId},
+        TYPE=#{type},
+        NAME=#{name},
+        path=#{path},
+        STATUS=#{status},
+        MODIFIER=#{modifier},
+        modify_time=now()
+        WHERE id=#{id}
+    </update>
+
+    <!--软删除试题资源-->
+    <update id="delQuestionResource" parameterType="QuestionResource">
+        UPDATE tb_question_resource SET
+        STATUS=#{status},
+        MODIFIER=#{modifier},
+        modify_time=now()
+        WHERE question_id=#{questionId}
+    </update>
+
+    <!--复制题资源信息-->
+    <insert id="copyQuestionResourceByQuestionId" parameterType="QuestionResource">
+        INSERT INTO tb_question_resource(
+        id,
+        question_id,
+        TYPE,
+        NAME,
+        path,
+        STATUS,
+        creater,
+        create_time
+        )
+        SELECT
+        UUID(),
+        #{newquestionId},
+        TYPE,
+        NAME,
+        path,
+        STATUS,
+        #{creater},
+        NOW()
+        FROM tb_question_resource
+        WHERE question_id=#{questionId}
+    </insert>
+
+    <!-- 获取试题资源列表 -->
+    <select id="listQuestionResource" parameterType="QuestionResource" resultType="QuestionResource">
+        SELECT
+          <include refid="basSql" />
+        FROM tb_question_resource
+        WHERE question_id = #{questionId}
+        ORDER  BY create_time
+    </select>
+
+</mapper>

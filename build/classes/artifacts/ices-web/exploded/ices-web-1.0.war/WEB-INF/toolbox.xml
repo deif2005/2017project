@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+    <tool>
+        <scope>session</scope>
+        <key>map</key>
+        <class>java.util.HashMap</class>
+    </tool>
+
+    <tool>
+        <key>date</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+        <timezone>GMT+8</timezone>
+    </tool>
+
+    <tool>
+        <key>escape</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.EscapeTool</class>
+    </tool>
+
+
+    <tool>
+        <key>math</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.MathTool</class>
+    </tool>
+</toolbox>

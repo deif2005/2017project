@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>制卷管理系统</title>
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/css/jquery.qtip.css" rel="stylesheet">
+	<link href="/static/css/angular-busy.css" rel="stylesheet">
+	<link href="/static/css/select2.min.css" rel="stylesheet">
+	<link href="/static/css/common.css" rel="stylesheet">
+	<link href="/static/plugins/layer/skin/layer.css" rel="stylesheet">
+	<link href="/static/plugins/ueditor/themes/default/css/ueditor.css" rel="stylesheet">
+	<!--<link href="static/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">-->
+</head>
+
+<body>
+	<div class="header">
+			<div class="header-bg">
+				<div class="font600" style="float:left;width: 20%;text-align: center;">制卷管理系统</div>
+				<div class="font600 menu" style="float:left;width: 60%;">
+					<div class="menu-panel" title="科目管理" id="100001" data-url="/subject/list">
+						<img src="/static/images/header/subject-manager.png">
+						<span>科目管理</span>
+						<img src="/static/images/header/split.png" style="margin-left: 15px;">
+						<img src="/static/images/header/active-menu.png" class="selected-img" >
+					</div>
+					<div class="menu-panel" title="试题管理" id="100002" data-url="/question/list">
+						<img src="/static/images/header/question-manager.png">
+						<span>试题管理</span>
+						<img src="/static/images/header/split.png" style="margin-left: 15px;">
+						<img src="/static/images/header/active-menu.png" class="selected-img">
+					</div>
+					<div class="menu-panel" title="试卷管理" id="100003" data-url="/paper/list">
+						<img src="/static/images/header/paper-manager.png">
+						<span>试卷管理</span>
+						<img src="/static/images/header/split.png" style="margin-left: 15px;">
+						<img src="/static/images/header/active-menu.png" class="selected-img">
+					</div>
+					<div class="menu-panel" title="导出试卷" id="100004" data-url="/paper/export">
+						<img src="/static/images/header/export.png">
+						<span>导出试卷</span>
+						<img src="/static/images/header/split.png" style="margin-left: 15px;">
+						<img src="/static/images/header/active-menu.png" class="selected-img">
+					</div>
+
+
+					<!--<ul class="font600 menu">-->
+						<!--<li title="科目管理" id="100001" data-url="/subject/list">-->
+							<!--<img src="/static/images/header/subject-manager.png">-->
+							<!--<span>科目管理</span>-->
+							<!--<img src="/static/images/header/split.png" style="margin-left: 30px;">-->
+							<!--<img src="/static/images/header/active-menu.png" class="selected-img">-->
+						<!--</li>-->
+						<!--<li title="试题管理" id="100002" data-url="/question/list">-->
+							<!--<img src="/static/images/header/question-manager.png">-->
+							<!--<span>试题管理</span>-->
+							<!--<img src="/static/images/header/split.png" style="margin-left: 30px;">-->
+							<!--<img src="/static/images/header/active-menu.png" class="selected-img">-->
+						<!--</li>-->
+						<!--<li title="试卷管理" id="100003" data-url="/paper/list">-->
+							<!--<img src="/static/images/header/paper-manager.png">-->
+							<!--<span>试卷管理</span>-->
+							<!--<img src="/static/images/header/split.png" style="margin-left: 30px;">-->
+							<!--<img src="/static/images/header/active-menu.png" class="selected-img">-->
+						<!--</li>-->
+						<!--<li title="导出试卷" id="100004" data-url="/paper/export">-->
+							<!--<img src="/static/images/header/export.png">-->
+							<!--<span>导出试卷</span>-->
+							<!--<img src="/static/images/header/split.png" style="margin-left: 30px;">-->
+							<!--<img src="/static/images/header/active-menu.png" class="selected-img">-->
+						<!--</li>-->
+					<!--</ul>-->
+				</div>
+				<div class="userMessage" style="color: #FFFFFF;float:left;width: 20%;">
+						<div class="header-user">
+							<div style="float: left;cursor: pointer;" class="update-pwd" title="修改密码">
+								<img src="/static/images/header/user.png">
+							</div>
+							<div style="float: left;margin-left: 10px;">
+								<div style="height: 15px;line-height: 15px;vertical-align: middle;">欢迎您</div>
+								<div class="loginName" title="${USER_INFO.account}">
+									${USER_INFO.account}
+								</div>
+							</div>
+							<div style="float: left;"  class="logout">
+								<img src="/static/images/header/loginout.png" style="margin-left: 55px;cursor: pointer;" title="退出">
+							</div>
+						</div>
+						<div  class="header-time">
+							<img src="/static/images/header/timer.png">
+							<span class="date">2016-06-18</span> <span class="week">星期六</span>
+						</div>
+				</div>
+		</div>
+		<div class="modal fade" id="updatePwdModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close"
+								data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">
+							修改密码
+						</h4>
+					</div>
+					<div class="modal-body editPwd" style="text-align: left;">
+						<form id="editPwdForm">
+							<input type="reset" name="reset" style="display: none;" />
+							<div class="editPwd-div">
+								<label class="required">原始密码</label>
+								<input type="password" name="oldPwd" class="common-input oldPwd" />
+							</div>
+							<div class="editPwd-div">
+								<label class="required">新密码&nbsp;&nbsp;&nbsp;</label>
+								<input type="password" name="newPwd" class="common-input newPwd"/>
+							</div>
+							<div class="editPwd-div">
+								<label class="required">确认密码</label>
+								<input type="password" name="doublePwd" class="common-input doublePwd"/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default"
+								data-dismiss="modal">关闭
+						</button>
+						<button type="button" class="btn btn-primary save-pwd">
+							提交更改
+						</button>
+					</div>
+				</div>
+			</div>
+	</div>
+</div>

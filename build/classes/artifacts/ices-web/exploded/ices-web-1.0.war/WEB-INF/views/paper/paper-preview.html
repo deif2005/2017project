@@ -1,0 +1,99 @@
+#parse("/header.html")
+<link href="/static/css/paper.css" rel="stylesheet">
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl" style="margin-top: 60px;">
+    <div class="top-panel">
+        <div class="title">
+            试卷预览
+        </div>
+        <div class="button-panel" style="margin-bottom:5px;">
+           <!-- <input type="button" class="btn common-btn" value="打印">
+            <input type="button" class="btn common-btn" value="开始">
+            <input type="button" class="btn common-btn" value="暂停"> -->
+            <input type="button" class="btn common-btn check-btn" value="审核确认" ng-click="check()">
+            <input type="button" class="btn common-btn" ng-click="getBack()" value="返回">
+        </div>
+    </div>
+    <div class="row preView">
+
+        <div class="col-xs-4">
+            <div class="user-ses">
+                <img src="/static/images/photo.jpg" width="87" height="110">
+                <div class="ses-d">
+                    <label>账号:</label>
+                    <span id="UserName">${USER_INFO.account}</span><br>
+                    <label>姓名:</label>
+                    <span>${USER_INFO.name}</span><br>
+                    <label>时间:</label>
+                    <span class="length">2016/07/19</span><br>
+                    <label>总分:</label>
+                    <span class="totalScore">150</span><br>
+                </div>
+                <br style="clear:both;" />
+            </div>
+            <div class="que-num" >
+                <div class="quenum-ses" ng-repeat="queses in quesNum">
+                    <div>{{queses.chapterId}},{{queses.name}}（共{{queses.count}}题，每题{{queses.score}}分)</div>
+                    <div ng-repeat="quesList in queses.questionNum">
+                    <div class="child-key">{{quesList.quesnum}}</div>
+                    </div>
+                    <br style="clear:both;" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8">
+            <div class="ques-lg">
+                <div class="tree-list" ng-repeat="data in quesNum">
+                    <div class="fud-list"><div class="tques">{{data.chapterId}},{{data.name}}（共{{data.count}}题，每题{{data.score}}分)</div><div class="handle empty"></div></div>
+                    <div class="question-list">
+                    <div  ng-repeat="dataList in data.questionContents">
+                        <div class="ques-op">
+                            <div ng-if="dataList.type == 101 ">
+                                <div class="chd-tab">
+                                    <div class="chd-num" data-id="{{dataList.quesId}}">{{$index+1}}. </div><div class="chd-list" ng-bind-html="dataList.name|to_trusted"></div>
+                                    <hr style="margin: 0px;">
+                                    <div ng-repeat="quesList in dataList.quesItemList" style="margin-top: 5px;">
+                                        <div class="question-cell"><input name="{{dataList.quesId}}" type="radio"/></div><div class="question-cell"> {{$index | getChar}}.</div><div class="question-cell" ng-bind-html="quesList.content|to_trusted"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-if="dataList.type == 102">
+                                <div class="chd-tab">
+                                <div class="chd-num" data-id="{{dataList.quesId}}">{{$index+1}}. </div><div class="chd-list" ng-bind-html="dataList.name|to_trusted"></div>
+                                <hr style="margin: 0px;">
+                                <div ng-repeat="quesList in dataList.quesItemList">
+                                    <div class="question-cell"><input name="{{dataList.quesId}}" type="checkbox"/></div><div class="question-cell"> {{$index | getChar}}.</div><div class="question-cell" ng-bind-html="quesList.content|to_trusted"></div>
+                                </div>
+                                </div>
+                            </div>
+                            <div ng-if="dataList.type == 103">
+                                <div class="chd-tab">
+                                <div class="chd-num" data-id="{{dataList.quesId}}">{{$index+1}}. </div><div class="chd-list" ng-bind-html="dataList.name|to_trusted"></div>
+                                <hr style="margin: 0px;">
+                                <div ng-repeat="quesList in dataList.quesItemList">
+                                    <input name="{{dataList.quesId}}" type="radio"/>{{$index | getChar}}.<span ng-bind-html="quesList.content|to_trusted"></span>
+                                </div>
+                                </div>
+                            </div>
+                            <div ng-if="dataList.type == 104">
+                                <div class="chd-tab">
+                                <div class="chd-num" data-id="{{dataList.quesId}}">{{$index+1}}. </div><div class="chd-list" ng-bind-html="dataList.name|to_trusted"></div>
+                                <hr style="margin: 0px;">
+                                <div ng-repeat="quesList in dataList.answers">
+                                    ({{$index+1}}).<textarea class="chd-text"></textarea>
+                                </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <br style="clear:both;" />
+            </div>
+        </div>
+
+    </div>
+
+</div>
+#parse("/footer.html")
+<script src="/static/js/paper/paper.preview.js"></script>

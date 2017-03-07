@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>制卷管理系统</title>
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/plugins/layer/skin/layer.css" rel="stylesheet">
+	<style>
+		.body-bg {
+			width: 100%;
+			background: url('/static/images/login/login-bg.png');
+			background-size:100%;
+		}
+
+		.body-bg .sys-btn {
+			background: url('/static/images/login/sys-btn.png') no-repeat;
+			width:90px;
+			height:90px;
+			line-height:90px;
+			text-align:center;
+			color:#FFFFFF;
+			cursor: pointer;
+		}
+		.body-bg .sys-btn.active {
+			background: url('/static/images/login/btn-active.png') no-repeat;
+		}
+		.body-bg .top {
+			position: absolute;
+			left: 128px;
+			top:-45px;
+		}
+		.body-bg .left {
+			position: absolute;
+			left: -45px;
+			top:128px;
+		}
+		.body-bg .right {
+			position: absolute;
+			right: -45px;
+			top:128px;
+		}
+		.body-bg .bottom {
+			position: absolute;
+			right: 128px;
+			bottom:-45px;
+		}
+		.common-input {
+			width: 352px;
+			border: 1px solid #cccccc;
+			height: 50px;
+			padding: 0 5px;
+			border-radius: 40px;
+			padding-bottom: 3px;
+		}
+		.login-btn {
+			background-color: #D8735F;
+			color: #FFFFFF;
+			width: 352px;
+			font-weight: bold;
+			font-size: 16px;
+			padding: 8px 12px;
+		}
+		.login-btn:hover,.login-btn:focus {
+			background-color:#FA9696;
+			color: #FFFFFF;
+		}
+		.rotate45{
+			transform:rotate(90deg);
+			-ms-transform:rotate(90deg); 	/* IE 9 */
+			-moz-transform:rotate(90deg); 	/* Firefox */
+			-webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+			-o-transform:rotate(90deg); 	/* Oper*/
+		}
+	</style>
+</head>
+
+<body class="body-bg">
+<div class="container">
+	<div class="row" style="margin-top: 5%;">
+		<div class="col-xs-12 text-center" style="color: #FFFFFF;">
+			<img src="/static/images/login/login-title.png">
+		</div>
+	</div>
+	<div class="row" style="margin-top: 50px;">
+		<div class="col-xs-7" style="padding: 50px 80px;">
+			<div style="position: relative;width: 346px;height: 346px;" class="test">
+				<img src="/static/images/login/login-left.png">
+				<div class="sys-btn top active">制卷系统</div>
+				<div class="sys-btn left">答题系统</div>
+				<div class="sys-btn bottom">监考系统</div>
+				<div class="sys-btn right">考场系统</div>
+			</div>
+		</div>
+		<div class="col-xs-5" style="margin-top: 100px;">
+			<div class="row">
+				<div class="col-xs-12">
+					<span style="color: #FFFFFF;margin-left: 10px;">用户名</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<input type="text"  class="common-input" id="userName"/>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 50px;">
+				<div class="col-xs-12">
+					<span style="color: #FFFFFF;margin-left: 10px;">密码</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<input type="password" class="common-input" id="password"/>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 50px;">
+				<div class="col-xs-12">
+					<button class="btn login-btn">登录</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--引用js文件-->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.blockUI.min.js"></script>
+<script src="/static/plugins/layer/layer.js"></script>
+<script src="/static/js/my.core.js"></script>
+<script src="/static/js/my.blockui.js"></script>
+<!--<script src="static/js/angular.min.js"></script>-->
+<script>
+	$(function() {
+		var _this = {
+			init: function() {
+				this.bindEvents();
+			},
+			bindEvents: function() {
+				//回车事件登录
+				$('#userName,#password').on('keyup',function(event) {
+					var userName = $('#userName').val();
+					var password = $('#password').val();
+					if(userName && password && event.keyCode ==13) {
+						_this.login();
+					}
+				});
+				//登录点击事件
+				$('.login-btn').on('click', this.login);
+			},
+			login: function() {
+				var userName = $('#userName').val();
+				var password = $('#password').val();
+				var param = {};
+				if(!userName || !password) {
+					MY.alert('用户名或密码不能为空','error');
+					return;
+				}
+				param.account = userName;
+				param.password = password;
+				MY.ajax({
+					url: '/userLogin',
+					data: param,
+					type: 'POST'
+				}).done(function (data) {
+					if (data.rtnCode == "000000") {
+						//缓存登录的用户信息；
+						sessionStorage.removeItem("userLogin");
+						var loginMessage = JSON.stringify(data.bizData);
+						sessionStorage.setItem("userLogin", loginMessage);
+						sessionStorage.setItem("menuId", '');
+						window.location.href = "/subject/list";
+					}else{
+						MY.alert('账号或密码错误，请重新输入！','error');
+					}
+				});
+			}
+		};
+		_this.init();
+	});
+</script>
+</body>
+</html>

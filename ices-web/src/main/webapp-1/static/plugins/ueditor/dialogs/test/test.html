@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>mydialog</title>
+    <link href="/Test/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/Test/js/layer/skin/layer.css" rel="stylesheet" type="text/css">
+      <script src="/Test/js/jquery.min.js"></script>
+      <script src="/Test/js/layer/layer.js"></script>
+    <script src="/Test/js/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="../internal.js"></script> -->
+    <style type="text/css">
+    /*.row{
+        margin: 10px 5px;
+    }*/
+    </style>
+</head>
+<body>
+	  <!-- <div class="container">
+	  		<div class="row">
+	  			<label class="col-xs-2">描述:</label>
+	  			<input type="text" class="col-xs-6" id="remark"/>
+	  		</div>
+  	  </div> -->
+  	 <div style="width: 500px;height: 500px;border: 1px solid;margin: auto;">
+  	 	<div style="width: 250px;height: 100px;margin: auto;">
+  	 		<label>用户名</label>
+  	 	</div>
+  	 </div>
+</body>
+<script type="text/javascript">
+    // dialog.onok = function(){
+        // editor.execCommand('inserthtml','<input type="radio">'+document.getElementById('remark').value,true);
+    // };
+//     
+$('input:radio[name="isTrue"][value="2"]').prop('checked',true);
+console.log($('input:radio[name="isTrue"]:checked').val());
+	
+    layer.alert('成功提示', {icon: 6});
+ </script>
+</html>

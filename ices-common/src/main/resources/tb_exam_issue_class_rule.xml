@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd 
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://www.springframework.org/schema/context 
+                        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--start 分表定义-->
+    <bean id="tb_exam_issue_class_rule" class="com.dangdang.ddframe.rdb.sharding.api.rule.TableRule">
+        <constructor-arg value="tb_exam_issue_class" index="0"/>
+        <constructor-arg index="1">
+            <list>
+                    <value>tb_exam_issue_class</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg index="2" ref="dataSourceRule"/>
+        <constructor-arg index="3" ref="databaseShardingStrategy_id"/>
+    </bean>
+
+
+
+
+    <!--end 分表定义-->
+</beans>

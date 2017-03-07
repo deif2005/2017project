@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.ISectionDao">
+    <!-- 批量添加大题信息 -->
+   <insert id="batchInsertSection">
+       INSERT INTO tb_section( id,chapter_id,paper_id,question_type_id,name,count,score,remark,sort,status,creater,create_time)
+       VALUES
+       <foreach collection="sectionList" item="l" index="index" separator="," >
+           (
+            #{l.id},#{l.chapterId},#{l.paperId},#{l.questionTypeId},#{l.name},#{l.count},#{l.score},#{l.remark},#{l.sort},'1', #{l.creater},now()
+           )
+       </foreach>
+   </insert>
+
+    <!--根据试卷ID查询大题信息-->
+    <select id="listSectionByPaperId" resultType="Section">
+        SELECT
+            id,
+            chapter_id,
+            paper_id,
+            question_type_id,
+            name,
+            count,
+            score,
+            remark,
+            sort,
+            status,
+            creater
+        FROM tb_section
+        WHERE status = '1'
+        <if test="paperId != null and paperId !=''">
+            AND paper_id=#{paperId}
+        </if>
+        <if test="chapterId != null and chapterId != ''">
+            AND chapter_id = #{chapterId}
+        </if>
+        ORDER BY sort
+    </select>
+
+    <!--批量修改大题信息-->
+    <update id="batchUpdateSection">
+        <foreach collection="sectionList" item="l" index="index"  separator=";">
+            UPDATE tb_section SET name=#{l.name},count=#{l.count},score=#{l.score},remark=#{l.remark},sort=#{l.sort},modifier=#{l.modifier},modify_time=now()
+            WHERE id=#{l.id}
+        </foreach>
+    </update>
+
+    <!--修改大题信息-->
+    <update id="updateSection">
+            UPDATE tb_section SET name=#{name},count=#{count},score=#{score},remark=#{remark},sort=#{sort},modifier=#{modifier},modify_time=now()
+            WHERE id=#{id}
+    </update>
+
+    <!--根据ID删除-->
+    <update id="deleteByPaperId">
+            UPDATE tb_section SET status=#{status} ,modifier=#{modifier},modify_time=now()
+            WHERE paper_id=#{paperId}
+    </update>
+</mapper>

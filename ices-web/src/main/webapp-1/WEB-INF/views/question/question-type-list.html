@@ -1,0 +1,103 @@
+#parse("/header.html")
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl">
+    <form id="searchForm">
+        <div class="row">
+            <div class="col-xs-6 text-left">
+                科目 <select name="subjectId" class="subject-select">
+                        <option value="">--全部--</option>
+                        #foreach($sub in $subList)
+                            <option value="$sub.id">$sub.name</option>
+                        #end
+                    </select>
+            </div>
+            <div class="col-xs-6 pull-right text-right">
+                <button class="btn common-btn" ng-click="addQuestion()">添加题型</button>
+            </div>
+        </div>
+    </form>
+    <div class="row table-div">
+        <table class="table table-bordered table-long" id="qtypeTable">
+            <thead>
+                <th style="width: 6%;">序号</th>
+                <th style="width: 20%;">题目类别</th>
+                <th style="width: 20%;">题目名称</th>
+                <th style="width: 30%;">备注说明</th>
+                <th style="width: 16%;">创建时间</th>
+                <th style="width: 8%;">操作</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="obj in modelEntrys.bizData.rows" data-id="{{obj.id}}" data-name="{{obj.name}}" data-obj="{{obj}}">
+                    <td>{{modelEntrys.bizData.pagesize*(modelEntrys.bizData.page-1)+$index+1}}</td>
+                    <td>{{obj.type | getTypeStr}}</td>
+                    <td>{{obj.name}}</td>
+                    <td>{{obj.remark}}</td>
+                    <td>{{obj.createtime}}</td>
+                    <td>
+                        <a href="javascript:void(0);" class="opt update-qtype">修改</a>
+                        <a href="javascript:void(0);" class="opt delete-qtype">删除</a>
+                    </td>
+                </tr>
+                <tr ng-if="modelEntrys.bizData.rows == 0">
+                    <td colspan="6" style="text-align: center;height: 60px;vertical-align: middle;font-size: 16px;">没有找到相关数据</td>
+                </tr>
+            </tbody>
+        </table>
+        <page model="modelEntrys" ajaxurl="/questiontype/queryQuestionType" formid="searchForm"></page>
+    </div>
+    <!--添加题型 modal-->
+    <div class="modal fade" id="addQTypeModal" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="addForm">
+                        <input type="hidden" name="id">
+                        <div class="form-group">
+                            <label class="col-xs-2 required text-right">所属科目:</label>
+                            <div class="col-xs-5">
+                                <select name="subjectId">
+                                    #foreach($sub in $subList)
+                                        <option value="$sub.id">$sub.name</option>
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 required text-right">所属基础题型:</label>
+                            <div class="col-xs-5">
+                                <select name="code" id="questionTypeSelect">
+                                    <option value="101" data-type="2">单选题</option>
+                                    <option value="102" data-type="2">多选题</option>
+                                    <option value="103" data-type="2">判断题</option>
+                                    <option value="104" data-type="2">填空题</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 required text-right">题型名称:</label>
+                            <div class="col-xs-5">
+                                <input type="text" class="common-input" name="name"  maxlength="36" placeholder="36(字符)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 text-right">备注说明:</label>
+                            <div class="col-xs-5">
+                                <textarea style="width: 230px;height: 60px;" name="remark"  maxlength="128" placeholder="128(字符)"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn common-btn" ng-click="saveQuestion()">保存</button>
+                    <button type="button" class="btn common-btn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加题型 modal-end -->
+</div>
+#parse("/footer.html")
+<script src="/static/js/subject/questiontype.list.js"></script>

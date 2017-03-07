@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.poi:poi-ooxml:3.12">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tools/gradle-1.12/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/3.12/d7a6675a9e99f351c9f3b98ca21e293d3ca12b08/poi-ooxml-3.12.jar!/" />
+      <root url="jar://E:/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/3.12/d7a6675a9e99f351c9f3b98ca21e293d3ca12b08/poi-ooxml-3.12.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tools/gradle-1.12/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/3.12/6e4a2f0a7de617f5f8cf76f3ccfb62c86856ea14/poi-ooxml-3.12-sources.jar!/" />
+      <root url="jar://E:/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/3.12/6e4a2f0a7de617f5f8cf76f3ccfb62c86856ea14/poi-ooxml-3.12-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,94 @@
+#parse("/header.html")
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl">
+    <div class="row">
+            <div class="col-xs-6" style="text-align: left;">
+                <select>
+                    <option>---请选择试卷类型(专业学科)---</option>
+                </select>
+            </div>
+            <div class="col-xs-6" style="text-align: right;">
+               <button class="btn common-btn">新建试卷</button>
+               <button class="btn common-btn">导入试卷</button>
+            </div>
+    </div>
+    <div class="row table-div">
+        <table class="table table-bordered table-long">
+            <thead>
+                <th>ID</th>
+                <th>试卷名称</th>
+                <th>时长</th>
+                <th>类别</th>
+                <th>创建人</th>
+                <th>状态</th>
+                <th>操作</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="obj in modelEntrys.bizData.rows">
+                    <td>{{obj.id}}</td>
+                    <td>{{obj.paperName}}</td>
+                    <td>{{obj.time}}</td>
+                    <td>{{obj.type}}</td>
+                    <td>{{obj.create}}</td>
+                    <td>{{obj.status}}</td>
+                    <td>
+                        <a href="#" class="opt update-opt">修改</a>
+                        <a href="#" class="opt">删除</a>
+                        <a href="#" class="opt">预览</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <page model="modelEntrys" ajaxurl="/test/getData" formid="searchForm"></page>
+    </div>
+</div>
+
+<!--查看详情 modal-->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">修改试卷</h4>
+            </div>
+            <div class="modal-body" style="height: 300px;">
+                <table class="table table-bordered table-condensed ">
+                    <thead>
+                    <tr>
+                        <th>考号</th>
+                        <th>评次</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn common-btn" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div><!-- modal-end -->
+#parse("/footer.html")
+<script>
+    var modelApp = angular.module('modelApp', []);
+    //初始化分页插件
+    MY.page.render(modelApp);
+
+    modelApp.controller('modelListCtrl', function ($scope) {
+        $('.table').on('click','.update-opt',function() {
+            $('#viewModal').modal();
+        });
+
+        //MY.alert提示框  参数说明：1.提示内容（必填）   2.类型(成功提示:"success",失败提示:"error"，警告:"warning")（必填） 3.确定的 回调函数（选填）
+        MY.alert("成功咯","success",function(index) {
+            //点击确定 有需要处理的业务逻辑 在callback函数里面执行 没有可不传  选填参数。
+            layer.close(index);
+        });
+
+        //MY.confirm 询问框 参数说明：1.提示内容（必填）   2.提示框标题（必填） 3.确定的 回调函数（选填） 4.取消的回调函数（选填）
+        MY.confirm("你确定要这么做吗？","提示",function(index) {
+            //点击确定 有需要处理的业务逻辑 在callback函数里面执行 没有可不传  选填参数。
+            layer.close(index);
+        },function() {
+            //点击取消 有需要处理的业务逻辑 在callback函数里面执行 没有可不传  选填参数。
+        });
+    });
+</script>

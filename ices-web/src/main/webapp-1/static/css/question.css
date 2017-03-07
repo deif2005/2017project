@@ -1,0 +1,58 @@
+/*试题列表样式*/
+.question-list {
+    width: 100%;
+}
+.question-unit {
+    margin: 20px auto;
+    width: 100%;
+    border: 1px solid #F0F0F0;
+    border-radius: 3px;
+}
+.question-unit:first-child {
+    margin-top: 0px;
+}
+.question-unit .question-info{
+    background-color: #F7F7F7;
+    width:100%;
+    color: #78787A;
+    margin-left: 0px;
+    padding: 5px;
+}
+.question-unit .question-content {
+    background-color: #FFFFFF;
+    width:100%;
+    margin-left: 0px;
+    padding:20px 5px;
+}
+.question-unit .question-opt {
+    display: inline-block;
+    padding:0px 10px;
+    border: 1px solid #E6E6E6;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.question-list .no-data {
+    background-color: #F7F7F7;
+    width:100%;
+    color: #78787A;
+    padding: 5px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    vertical-align: middle;
+}
+/*试题列表样式结束*/
+/*新增试题样式*/
+.del-icon {
+    cursor:pointer;
+}
+.qes-content {
+    font-weight: bold;
+}
+.qes-answer {
+    margin-top: 20px;
+    font-weight: bold;
+}
+/*新增试题样式结束*/
+.sys-upload {max-width: 100%; /*试题图片自适应宽度*/}
+

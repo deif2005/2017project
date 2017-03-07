@@ -1,0 +1,9 @@
+rootProject.name = 'ices-zj'
+
+include 'ices-common'
+
+include 'ices-domain'
+
+include 'ices-service'
+
+include 'ices-web'

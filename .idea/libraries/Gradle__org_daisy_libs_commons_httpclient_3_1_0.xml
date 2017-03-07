@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.daisy.libs:commons-httpclient:3.1.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tools/gradle-1.12/caches/modules-2/files-2.1/org.daisy.libs/commons-httpclient/3.1.0/b5f944c1efca64cd26a6aed6a0994b6a5396b748/commons-httpclient-3.1.0.jar!/" />
+      <root url="jar://E:/.gradle/caches/modules-2/files-2.1/org.daisy.libs/commons-httpclient/3.1.0/b5f944c1efca64cd26a6aed6a0994b6a5396b748/commons-httpclient-3.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tools/gradle-1.12/caches/modules-2/files-2.1/org.daisy.libs/commons-httpclient/3.1.0/40783459796b3060f9cb46fa55eaebbafd1efd41/commons-httpclient-3.1.0-sources.jar!/" />
+      <root url="jar://E:/.gradle/caches/modules-2/files-2.1/org.daisy.libs/commons-httpclient/3.1.0/40783459796b3060f9cb46fa55eaebbafd1efd41/commons-httpclient-3.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

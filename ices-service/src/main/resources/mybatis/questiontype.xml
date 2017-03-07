@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.IQuestionTypeDao">
+    <sql id="baseSql">
+        id,subject_id AS subjectId,NAME,TYPE,code,STATUS,remark,creater,concat(create_time,'') as create_time,modifier,modify_time
+    </sql>
+
+    <!--分页查询题型信息-->
+    <select id="pageQuestionType" resultType="QuestionType">
+        SELECT <include refid="baseSql"/> from tb_question_type
+        WHERE status=#{status}
+        <if test="subjectId!=null and subjectId!=''">
+            AND subject_id=#{subjectId}
+        </if>
+        order by  create_time desc LIMIT #{startpage},#{rows}
+    </select>
+
+    <!--获取题型信息-->
+    <select id="getQuestionTypeById" resultType="QuestionType">
+        SELECT <include refid="baseSql"/> FROM tb_question_type WHERE id=#{id}
+
+    </select>
+
+    <!--统计题型数量-->
+    <select id="countQuestionType" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM tb_question_type WHERE status=#{status}
+        <if test="subjectId!=null and subjectId!=''">
+            AND subject_id=#{subjectId}
+        </if>
+    </select>
+
+    <!--添加题型信息-->
+    <insert id="insertQuestionType" parameterType="QuestionType">
+        INSERT INTO tb_question_type(id,subject_id,name,type,code, status,
+        <if test="remark!=null and remark!=''">
+            remark,
+        </if>
+        <if test="creater!=null and creater!=''">
+            creater,
+        </if>
+        create_time
+        )
+        VALUES(
+        #{id},#{subjectId},#{name},#{type},#{code},'1',
+        <if test="remark!=null and remark!=''">
+            #{remark},
+        </if>
+        <if test="creater!=null and creater!=''">
+            #{creater},
+        </if>
+        now()
+        )
+    </insert>
+
+    <!--修改题型-->
+    <update id="updateQuestionTypeById" parameterType="QuestionType">
+        UPDATE tb_question_type
+        SET modifier=#{modifier},
+            modify_time=now(),
+            name=#{name},
+            remark=#{remark}
+            <if test="status!=null and status!=''">
+              ,status=#{status}
+            </if>
+        WHERE id=#{id}
+    </update>
+
+    <!--获取题型信息集合-->
+    <select id="listQuestionType" resultType="QuestionType">
+        SELECT <include refid="baseSql"/> FROM tb_question_type WHERE status=#{status}
+        <if test="subjectId!=null and subjectId!=''">
+        AND subject_id=#{subjectId}
+        ORDER  BY code asc
+        </if>
+    </select>
+
+    <!--根据科目ID获取题型信息-->
+    <select id="listQuestionTypeBySubjectId" resultType="QuestionType">
+        SELECT <include refid="baseSql"/> FROM tb_question_type
+        WHERE status=#{status} AND subject_id=#{subjectId} order by code asc
+    </select>
+
+    <!--获取系统基础题型信息集合-->
+    <select id="listSysQuestionType" resultType="SysQuestionType">
+        SELECT id,name,code,type,create_time  FROM tb_sys_question_type ORDER by code asc
+    </select>
+
+    <!--软删除题型信息-->
+    <delete id="deleteQuestionTypeById" parameterType="QuestionType">
+        UPDATE tb_question_type SET
+          modifier=#{modifier},
+          modify_time=now(),
+          status=2
+        WHERE id=#{id}
+    </delete>
+</mapper>

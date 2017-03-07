@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.ISectionQuestionsDao">
+
+    <sql id="BaseSql">id,section_id,question_id,chapter_id,paper_id,sort,creater,concat(create_time,'') as create_time</sql>
+
+   <!--批量添加大题试题关系-->
+    <insert id="batchInsertSectionQuestions">
+        INSERT INTO tb_section_question (
+        id,section_id,question_id,chapter_id,paper_id,sort,creater,create_time
+        )VALUES
+        <foreach collection="sectionQuestionsList" item="l" index="index" separator="," >
+            (
+              #{l.id},#{l.sectionId},#{l.questionId},#{l.chapterId},#{l.paperId},#{l.sort},#{l.creater},now()
+            )
+        </foreach>
+    </insert>
+
+    <!--批量修改大题试题关系-->
+    <update id="batchUpdateSectionQuestion">
+        <foreach collection="sectionQuestionsList" item="l" index="index"  separator=";">
+            UPDATE tb_section_question SET question_id=#{l.questionId} , sort=#{l.sort} WHERE id=#{l.id}
+        </foreach>
+    </update>
+
+    <!--修改大题试题关系-->
+    <update id="updateSectionQuestion">
+            UPDATE tb_section_question SET question_id=#{questionId} , sort=#{sort} WHERE id=#{id}
+    </update>
+
+    <!--批量删除大题试题关系-->
+    <delete id="batchDeleteSectionQuestion">
+        <foreach collection="sectionQuestionsList" item="l" index="index"  separator=";">
+           DELETE FROM  tb_section_question WHERE #{l.id}
+        </foreach>
+    </delete>
+
+    <!--根据试卷ID查询-->
+    <select id="listSectionQuestionByPaperId" resultType="SectionQuestions">
+        SELECT <include refid="BaseSql"/> FROM tb_section_question
+                WHERE section_id in(SELECT id FROM tb_section WHERE paper_id=#{paperId})
+        ORDER  BY create_time desc
+    </select>
+
+    <!--根据试卷ID删除-->
+    <delete id="deleteByPaperId">
+        DELETE FROM tb_section_question WHERE paper_id=#{paperId}
+    </delete>
+
+    <!--根据试题ID统计-->
+    <select id="countByQuestionId" resultType="java.lang.Integer">
+        SELECT count(*) FROM tb_section_question WHERE question_id=#{questionId}
+    </select>
+</mapper>

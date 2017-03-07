@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.IPaperKnowDao">
+
+
+    <sql id="BaseSql">id,paper_id,know_id,creater,create_time</sql>
+
+    <!--新增试卷知识点关系-->
+    <insert id="insertPaperKnow">
+        INSERT INTO tb_paper_know(
+          <include refid="BaseSql"/>
+        ) VALUES
+        <foreach collection="paperKnowList" item="l" index="index" separator="," >
+            ( #{l.id},#{l.paperId},#{l.knowId},#{l.creater},now() )
+        </foreach>
+    </insert>
+
+    <!--批量修改试卷知识点关系-->
+    <update id="batchUpdatePaperKnow" parameterType="java.util.List">
+        <foreach collection="paperKnowList" item="l" index="index"   separator=";">
+          UPDATE  tb_paper_know SET know_id=#{l.knowId} WHERE id=#{l.id}
+        </foreach>
+    </update>
+
+    <!--修改试卷知识点关系-->
+    <update id="updatePaperKnow" parameterType="PaperKnow">
+            UPDATE  tb_paper_know SET know_id=#{knowId} WHERE id=#{id}
+    </update>
+
+    <!--根据试卷ID查询-->
+    <select id="listPaperKnowByPaperId" resultType="PaperKnow">
+        SELECT <include refid="BaseSql"/> FROM tb_paper_know WHERE paper_id=#{paperId} ORDER  BY create_time
+    </select>
+
+    <!--根据试卷ID删除-->
+    <delete id="deleteByPaperId">
+        DELETE FROM  tb_paper_know WHERE paper_id=#{paperId}
+    </delete>
+</mapper>

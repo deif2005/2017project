@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.IPaperDao">
+
+    <sql id="BaseSql">
+        id,name,subject_id,type,pass_score,total_score,length,questions_json,check_status,status,remark,creater,concat(create_time,'') as create_time,modifier,modify_time
+    </sql>
+    <!--新增-->
+    <sql id="insertSql">
+        id,name,subject_id,type,pass_score,total_score,length,questions_json,check_status,status,remark,creater,create_time
+    </sql>
+    <!--修改-->
+    <sql id="updateSql">
+        id,name,subject_id,type,pass_score,total_score,length,questions_json,check_status,status,remark,modifier,modify_time
+    </sql>
+
+
+    <!--分页查询试题列表-->
+    <select id="pagePaper" resultType="Paper">
+        SELECT
+          <include refid="BaseSql"/>
+        FROM tb_paper
+        WHERE status = #{paper.status}
+        <if test="paper.subjectId != null and paper.subjectId != ''">
+            AND subject_id = #{paper.subjectId}
+        </if>
+        <if test="paper.checkStatus != null and paper.checkStatus != ''">
+            AND check_status = #{paper.checkStatus}
+        </if>
+        order by create_time desc
+        LIMIT #{startPage},#{endPage}
+    </select>
+
+    <!--统计试卷数量-->
+    <select id="countPaper" parameterType="Paper" resultType="java.lang.Integer">
+        SELECT
+          COUNT(*)
+        FROM tb_paper
+        WHERE status=#{status}
+        <if test="subjectId != null and subjectId != ''">
+            AND subject_id = #{subjectId}
+        </if>
+        <if test="checkStatus != null and checkStatus != ''">
+            AND check_status = #{checkStatus}
+        </if>
+    </select>
+
+    <!--新增试卷信息-->
+    <insert id="insertPaper" parameterType="Paper">
+         INSERT INTO tb_paper( <include refid="insertSql"/>
+         ) VALUES (
+          #{id},#{name},#{subjectId},#{type},#{passScore},#{totalScore},#{length},
+          #{questionsJson},#{checkStatus},'1',#{remark,jdbcType=VARCHAR},#{creater},now()
+        )
+    </insert>
+
+    <!--删除试卷（软删除）-->
+    <update id="deletePaperById">
+        UPDATE tb_paper SET status=#{status} WHERE id=#{id}
+    </update>
+
+    <!--根据试卷ID查询试卷信息-->
+    <select id="getPaperById" resultType="Paper">
+        SELECT <include refid="BaseSql"/> FROM tb_paper WHERE id=#{id} AND status='1'
+    </select>
+
+    <!--修改试卷信息-->
+    <update id="updatePaper" parameterType="Paper">
+        UPDATE tb_paper SET
+         name=#{name},subject_id=#{subjectId},type=#{type},pass_score=#{passScore},total_score=#{totalScore},length=#{length},
+          questions_json=#{questionsJson},check_status=#{checkStatus},remark=#{remark,jdbcType=VARCHAR},modifier=#{modifier},modify_time=now() WHERE id=#{id}
+    </update>
+
+    <!--更新试卷check_status状态-->
+    <update id="updatePaperCheckStatus"  parameterType="Paper">
+        UPDATE tb_paper SET check_status=#{checkStatus},modifier=#{modifier},modify_time=now() WHERE id=#{id}
+    </update>
+
+    <!-- 查询试卷列表 -->
+    <select id="listPaperByIds" parameterType="Paper" resultType="Paper">
+      SELECT
+        <include refid="BaseSql"/>
+      FROM tb_paper
+      WHERE id in (${id})
+      ORDER  BY create_time desc
+    </select>
+
+    <!--根据名ID或称统计-->
+    <select id="countByName" parameterType="Paper" resultType="java.lang.Integer">
+        SELECT  count(*) FROM  tb_paper WHERE name=#{name} AND status='1'
+    </select>
+
+</mapper>

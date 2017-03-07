@@ -1,0 +1,64 @@
+#parse("/header.html")
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl" >
+    <form class="form-horizontal" id="searchForm">
+        <input type="hidden" name="checkStatus" value="3">
+        <div class="row">
+                <div class="col-xs-8">
+                        考试科目
+                        <select name="subjectId" class="sub-select">
+                            <option value="">--全部--</option>
+                            #foreach($sub in $subList)
+                                <option value="$sub.id">$sub.name</option>
+                            #end
+                        </select>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <input type="button" class="btn common-btn export-btn"  value="开始导出">
+                </div>
+        </div>
+    </form>
+    <div class="row table-div">
+        <table class="table table-bordered table-long">
+            <thead>
+                <th style="width: 8%;">序号</th>
+                <th style="width: 46%;">试卷名称</th>
+                <th style="width: 10%;">时长</th>
+                <th style="width: 10%;">类别</th>
+                <th style="width: 20%;">创建时间</th>
+                <th style="width: 6%;">操作</th>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <page model="modelEntrys" ajaxurl="/paper/pagePaper" formid="searchForm"></page>
+    </div>
+    <!--添加科目 modal-->
+    <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-hidden="false" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">导出试卷</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="exportForm">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3">考试名称</label>
+                            <div class="col-xs-6">
+                                <input type="text" class="common-input" name="paperName" id="paperName">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn common-btn" ng-click="exportPaper()">导出</button>
+                    <button type="button" class="btn common-btn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal-end -->
+</div>
+#parse("/footer.html")
+<script src="/static/js/paper/paper.export.js"></script>

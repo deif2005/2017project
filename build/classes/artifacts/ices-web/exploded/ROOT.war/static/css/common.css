@@ -1,0 +1,310 @@
+body {
+    font-family: "Microsoft Yahei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+.container{
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+/*头部样式开始*/
+.header {
+    width: 100%;
+}
+
+.header .menu-panel .selected-img{
+    position: absolute;
+    bottom: -2px;
+    left: -15px;
+    display: none;
+}
+.header .menu-panel.active .selected-img{
+    display: block;
+}
+.header .header-bg {
+    height: 60px;
+    background: url('/static/images/header/header-bg.png') no-repeat;
+    background-size:100%;
+    line-height: 60px;
+    vertical-align: middle;
+    margin: 0px;
+    -moz-background-size:100% 60px;
+    -webkit-background-size:100% 60px;
+    -o-background-size:100% 60px;
+    background-size:100% 60px;
+}
+.header .font600 {
+    color: #FFFFFF;
+    font-size: large;
+    font-weight:600;
+}
+.header .header-user,.header-time {
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    margin-left: 20px;
+}
+.header .header-user .loginName {
+    width: 60px;
+    height: 15px;
+    line-height: 15px;
+    vertical-align: middle;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.menu .menu-panel {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+    vertical-align: middle;
+    padding:0px 8px;
+    cursor: pointer;
+}
+/*头部样式结束*/
+
+/*底部样式开始*/
+.footer {
+    height: 40px;
+    width: 100%;
+    background-color: #272727;
+    font-size: 14px;
+    text-align: center;
+    line-height: 40px;
+    vertical-align: middle;
+    position: fixed;
+    bottom: -1px;
+    z-index: 1000;
+}
+.footer a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.footer .split {
+    color: #FFFFFF;
+    margin: 0 10px;
+}
+/*底部样式结束*/
+
+/*公共按钮，输入框样式开始*/
+select {
+    width: 220px;
+    border: 1px solid #cccccc;
+    height: 30px;
+    padding: 0 5px;
+    border-radius: 3px;
+    padding-bottom: 3px;
+}
+.common-input {
+    width: 220px;
+    border: 1px solid #cccccc;
+    height: 32px;
+    padding: 0 5px;
+    border-radius: 3px;
+    padding-bottom: 3px;
+}
+.common-btn {
+    color: #FFFFFF;
+    background-color:rgb(42,182,111);
+    border-radius: 5px;
+    height: 30px;
+    line-height: 10px;
+}
+.common-btn:hover {
+    color:#ffffff;
+    background-color:#02df82;
+}
+.common-btn:focus {
+    color:#ffffff;
+    background-color:#02df82;
+}
+.editPwd .editPwd-div {
+    margin:0 auto 15px; clear:both;
+}
+.editPwd .editPwd-div input{
+    margin-left:10px;
+}
+/*公共按钮，输入框样式结束*/
+
+
+/*表格样式开始*/
+.table-div {
+    margin-top: 5px;
+    padding: 10px;
+}
+.table {
+    border:solid 1px #b3e1ba;
+}
+.table .opt {
+    margin:5px;
+    text-decoration: underline;
+}
+
+.table th,td {
+    text-align: center;
+}
+.table th {
+    height: 36px;
+    font-family: "Microsoft Yahei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    background-color: RGB(243,254,243);
+}
+.table td {
+    height: 34px;
+    font-size: 13px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.table tr:nth-child(2n) {
+    background:#fafefa;
+}
+.table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+    border-bottom-width: 1px;
+    border:solid 1px #c8e8cd;
+}
+
+.table-bordered > tbody > tr > td{
+    border-right-color:#c8e8cd;
+}
+
+.table-bordered > tbody > tr > td:first-child{
+    border-left-color:#b3e1ba;
+}
+.table-bordered > tbody > tr > td:last-child{
+    border-right-color:#b3e1ba;
+}
+
+.table-bordered > tbody > tr:last-child > td{
+    border-bottom-color:#b3e1ba;
+}
+
+.table-bordered > tbody > tr:hover{
+    background-color: #b3e1ba;
+}
+/*表格样式结束*/
+
+/*分页样式*/
+.page-num{
+    padding:5px 0;
+    text-align:center;
+}
+.page-num input{
+    width:50px;
+    padding:5px;
+    display:inline-block;
+    text-align:center;
+    font-size:14px;
+    vertical-align:middle;
+}
+.page-num .btn-primary{
+    background-color: RGB(42,178,109);
+    border: 1px solid RGB(42,178,109);
+}
+
+.page-num .btn-primary.disabled{
+    background-color: #446661;
+    border: 1px solid  #446661;
+}
+/*分页样式*/
+
+/*弹出层 样式*/
+.modal-header {
+    background-color: rgb(42,164,102);
+    color: #FFFFFF;
+    height: 40px;
+}
+.modal-header .close {
+    margin-top: -8px;
+    color: #FFFFFF;
+}
+.modal-header .modal-title {
+    margin-top: -8px;
+    font-size: 16px;
+}
+
+/*必填项*/
+.required:before {
+    content: '*';
+    color: #FF0000;
+}
+
+/*页面遮罩样式开始*/
+.oto-block-loading {
+    width: 100px;
+    height: 100px;
+}
+/*页面遮罩样式结束*/
+
+/*新增试题样式*/
+.del-icon {
+    cursor:pointer;
+}
+
+.qes-option {
+    padding: 5px;
+}
+.qes-content {
+    font-weight: bold;
+}
+.qes-answer {
+    margin-top: 20px;
+    font-weight: bold;
+}
+.qes-remark {
+    margin-top: 20px;
+}
+/*新增试题样式结束*/
+.top-panel {
+    padding: 0px 15px;
+    position: fixed;
+    top: 65px;
+    right: 0px;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+}
+/*操作按钮定位到顶部*/
+.top-panel.position-top {
+    background-color: #FFFFFF;
+    z-index: 1040;
+
+}
+.top-panel .title {
+    font-size: 20px;
+    width: 10%;
+    text-align: left;
+    display: inline-block;
+}
+.top-panel .button-panel {
+    width: 88%;
+    text-align: right;
+    display: inline-block;
+}
+.top-panel .button-panel .common-btn {
+    margin: 5px;
+}
+/*操作按钮定位到顶部结束*/
+
+/*表单验证样式*/
+.form-valid-error {
+    border-color: #A94442;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.form-valid-error:focus {
+    border-color: #843534;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 6px #CE8483;
+}
+.select2-valid-error {
+    border:1px solid #843534;
+}
+/*表单验证样式结束*/
+p {
+    word-wrap :  break-word;
+    word-break: break-all;
+}
+.question-cell {
+    display: table-cell;
+}
+.question-row {
+    margin: 10px 0px;
+}

@@ -1,0 +1,170 @@
+#parse("/header.html")
+<style>
+    .sys-upload {max-width: 100%; /*试题图片自适应宽度*/}
+</style>
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl">
+    <div class="top-panel">
+        <div class="title">
+            新增试题
+        </div>
+        <div class="button-panel">
+            <input type="button" class="btn common-btn save-btn" style="margin: 5px;" value="保存">
+            <input type="button" class="btn common-btn preview-btn"  style="margin: 5px;"  value="预览">
+            <input type="button" class="btn common-btn cancel-btn" ng-click="cancelEvent()" style="margin: 5px;" value="取消">
+        </div>
+    </div>
+    <form class="form-horizontal" id="questionForm">
+        <input type="hidden" name="id" value="$!{questionResponse.id}">
+        <input type="hidden" name="subjectId" value="$!{questionResponse.subjectId}">
+        <input type="hidden" name="questionTypeId" value="$!{questionResponse.questionTypeId}">
+        <input type="hidden" name="status" value="$!{questionResponse.status}">
+        <input type="hidden" name="checkStatus" value="$!{questionResponse.checkStatus}">
+        <textarea style="display: none;" id="questionContentPanel">$!{contentJson}</textarea>
+        <div class="form-group">
+                <label for="subject" class="required col-md-1">所属科目</label>
+                <div class="col-md-4">
+                    <select name="subjectId"  id="subject" disabled>
+                        #foreach($subject in $subjectList)
+                            #set($selected ="")
+                            #if($subject.id == $questionResponse.subjectId)
+                                 #set($selected ="selected")
+                            #end
+                            <option value="$subject.id" $selected>$subject.name</option>
+                        #end
+                    </select>
+                </div>
+                <label for="difficulty" class="required col-md-1">题目难度</label>
+                <div class="col-md-4">
+                    <select name="difficulty"  id="difficulty">
+                        #foreach($obj in $questionHard)
+                            #set($selected ="")
+                            #if($obj.value == $questionResponse.difficulty)
+                                 #set($selected ="selected")
+                            #end
+                             <option value="$obj.value" $selected>$obj.name</option>
+                        #end
+                    </select>
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="type" class="required col-md-1">试题类型</label>
+                <div class="col-md-4">
+                    <select name="questionTypeId"  id="type" disabled>
+                        #foreach($qtype in $questionTypeList)
+                            #set($selected ="")
+                            #if($qtype.id == $questionResponse.questionTypeId)
+                                #set($selected ="selected")
+                            #end
+                            <option data-code="$qtype.code" value="$qtype.id" $selected>$escape.html($qtype.name)</option>
+                        #end
+                    </select>
+                </div>
+                <label class="required col-md-1">试题来源</label>
+                <div class="col-md-4">
+                    <input type="text" class="common-input" name="resource" id="resource" value="$questionResponse.resource" placeholder="64(字符)" maxlength="64">
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="knowledgeId" class="required col-md-1">知识分类</label>
+                <div class="col-md-4">
+                    <select name="knowledgeIds" class="select2-render"  id="knowledgeId" multiple="multiple">
+                        #foreach($knowledge in $knowledgeList)
+                            #set($selected ="")
+                            #foreach($selectedKnow in $questionResponse.questionKnowList)
+                                #if($knowledge.id == $selectedKnow.knowId)
+                                    #set($selected ="selected")
+                                    #break
+                                #end
+                            #end
+                            <option  value="$knowledge.id" $selected>$escape.html($knowledge.name)</option>
+                        #end
+                    </select>
+                </div>
+                <label for="keyword" class="required col-md-1">关键字</label>
+                <div class="col-md-4">
+                    <input type="text" class="common-input" name="keyword" id="keyword" value="$questionResponse.keyword" placeholder="32(字符)" maxlength="32">
+                </div>
+        </div>
+
+
+        <div class="form-group">
+                <label  class="required col-md-1">试题内容</label>
+                <div class="col-md-8">
+                    <script type="text/plain" id="quesContent" name="questionContent.questionContent" style="height:100px;">$questionResponse.name</script>
+                </div>
+        </div>
+        <div class="form-group">
+            <label  class="required col-md-1">答题区</label>
+            <div class="col-md-8">
+                <div class="answer-panel">
+
+                </div>
+                <a href="javascript:void(0);">
+                    <span class="glyphicon glyphicon-plus add-options" style="font-size:20px;"></span>
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label  class="col-md-1">试题解析</label>
+            <div class="col-md-8">
+                <script type="text/plain" name="questionContent.questionanAlysis" id="quesRemark" style="height:80px;">$!{questionResponse.questionContent.questionanAlysis}</script>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div style="display: none;">
+    <!--单选选项区域模板-->
+    <div class="answer-panel-child" id="radioTempPanel">
+        <label class="unit"><input type="radio"> <span class="sort"></span>.</label>
+        <a href="javascript:void(0)" class="del-icon">删除</a>
+        <script type="text/plain" class="editor" style="height:80px;"> </script>
+    </div>
+    <!--单选选项区域模板结束-->
+    <!--多选选项区域模板-->
+    <div class="answer-panel-child" id="checkboxTempPanel">
+        <label class="unit"><input type="checkbox"> <span class="sort"></span>.</label>
+        <a href="javascript:void(0)" class="del-icon">删除</a>
+        <script type="text/plain" class="editor"  style="height:80px;"> </script>
+    </div>
+    <!--多选选项区域模板结束-->
+    <!--判断选项区域模板-->
+    <div class="answer-panel-child" id="judgmentTempPanel">
+        <div class="qes-option"><input type="radio">对</div>
+        <div class="qes-option"><input type="radio">错</div>
+    </div>
+    <!--判断选项区域模板结束-->
+    <!--填空选项区域模板-->
+    <div class="answer-panel-child" id="insertTempPanel">
+        <label class="unit"><span class="sort"></span>.</label>
+        <a href="javascript:void(0)" class="del-icon">删除</a>
+        <script type="text/plain" class="editor" style="height:80px;"> </script>
+    </div>
+    <!--填空选项区域模板结束-->
+</div>
+<!--预览 modal-->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">试题预览</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn common-btn" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal-end -->
+#parse("/footer.html")
+<script src="/static/plugins/ueditor/ueditor.config.js"></script>
+<script src="/static/plugins/ueditor/ueditor.all.js"></script>
+<script src="/static/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="/static/plugins/ueditor/kityformula-plugin/addKityFormulaDialog.js"></script>
+<script src="/static/plugins/ueditor/kityformula-plugin/getKfContent.js"></script>
+<script src="/static/plugins/ueditor/kityformula-plugin/defaultFilterFix.js"></script>
+<script src="/static/js/question/question.edit.js"></script>

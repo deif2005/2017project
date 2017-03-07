@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.IQuestionDao">
+
+    <resultMap id="BaseResultMap" type="com.mingyu.ices.domain.dto.user.QuestionResponse" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="question_type_id" property="questionTypeId" jdbcType="VARCHAR" />
+        <result column="subject_id" property="subjectId" jdbcType="VARCHAR" />
+        <result column="context_path" property="contextPath" jdbcType="VARCHAR"/>
+        <result column="difficulty" property="difficulty" jdbcType="TINYINT"/>
+        <result column="resource" property="resource" jdbcType="VARCHAR"/>
+        <result column="keyword" property="keyword" jdbcType="VARCHAR"/>
+        <result column="check_status" property="checkStatus" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="creater" property="creater" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="modifier" property="modifier" jdbcType="VARCHAR"/>
+        <result column="modify_time" property="modifytime" jdbcType="TIMESTAMP"/>
+        <result column="subjectName" property="subjectName" jdbcType="VARCHAR"/>
+        <result column="questiontype_name" property="questionTypeName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="baseSql">
+         id,name,question_type_id,subject_id,context_path,difficulty,resource,keyword,check_status,status,remark,creater,create_time,modifier,modify_time
+    </sql>
+    <!--分页查询试题列表-->
+    <select id="pageQuestion" resultMap="BaseResultMap">
+        SELECT qt.*,sj.name AS subjectName,qty.name AS questiontype_name
+        from tb_question qt, tb_subject sj, tb_question_type qty
+            where qt.status='1'
+            AND qt.subject_id=sj.id
+            AND qty.id=qt.question_type_id
+            <if test="question.knowId!=null and question.knowId!=''">
+               AND qt.id in(SELECT question_id FROM tb_question_know WHERE know_id=#{question.knowId})
+            </if>
+            <if test="question.subjectId!=null and question.subjectId!=''">
+               AND  qt.subject_id=#{question.subjectId}
+            </if>
+            <if test="question.questionTypeId!=null and question.questionTypeId!=''">
+                AND  question_type_id=#{question.questionTypeId}
+            </if>
+            <if test="question.keyword!=null and question.keyword!=''">
+                AND qt.keyword LIKE CONCAT('%','${question.keyword}','%' )
+            </if>
+            <if test="question.checkStatus!=null and question.checkStatus!=''">
+                AND qt.check_status=#{question.checkStatus}
+            </if>
+             ORDER BY create_time DESC
+             LIMIT #{statsPage},#{endPage}
+
+    </select>
+
+    <!--获取试题内容-->
+    <select id="getQuestionDetail" resultMap="BaseResultMap">
+        SELECT
+           a.id,
+           a.name,
+           a.question_type_id,
+           a.subject_id,
+           a.context_path,
+           a.difficulty,
+           a.resource,
+           a.keyword,
+           a.check_status,
+           a.STATUS,
+           a.remark,
+           a.creater,
+           a.create_time,
+           a.modifier,
+           a.modify_time,
+           b.name AS questionTypeName
+        FROM
+           tb_question a
+        LEFT JOIN tb_question_type b ON  a.question_type_id=b.id
+        WHERE a.id=#{id}
+    </select>
+
+    <!--根据题目ID获得题目信息-->
+    <select id="getQuestionById" resultType="Question">
+         SELECT <include refid="baseSql"></include>  FROM tb_question WHERE id=#{id} AND status='1'
+    </select>
+
+    <!--修改试题内容-->
+    <update id="updateQuestion" parameterType="Question">
+        UPDATE tb_question SET
+           name=#{name},
+           difficulty=#{difficulty},
+           resource=#{resource},
+           keyword=#{keyword},
+           remark=#{remark},
+           modifier=#{modifier},
+           modify_time=now()
+        WHERE id=#{id}
+    </update>
+
+    <!--统计试题数量-->
+    <select id="countQuestion" resultType="java.lang.Integer">
+         SELECT  COUNT(1)
+             from tb_question qt, tb_subject sj, tb_question_type qty
+             where qt.status=#{question.status}
+             AND qt.subject_id=sj.id
+             AND  qt.subject_id=sj.id
+             AND qty.id=qt.question_type_id
+            <if test="question.knowId!=null and question.knowId!=''">
+                AND qt.id in(SELECT question_id FROM tb_question_know WHERE know_id=#{question.knowId})
+            </if>
+            <if test="question.subjectId!=null and question.subjectId!=''">
+                AND  qt.subject_id=#{question.subjectId}
+            </if>
+            <if test="question.questionTypeId!=null and question.questionTypeId!=''">
+                AND  question_type_id=#{question.questionTypeId}
+            </if>
+            <if test="question.keyword!=null and question.keyword!=''">
+                AND qt.keyword LIKE CONCAT('%','${question.keyword}','%' )
+            </if>
+            <if test="question.checkStatus!=null and question.checkStatus!=''">
+                AND qt.check_status=#{question.checkStatus}
+            </if>
+    </select>
+
+    <!--更新试题审核状态-->
+    <select id="updateQuestionCheckStatus" parameterType="Question">
+        UPDATE tb_question set check_status = #{checkStatus},modifier=#{modifier},modify_time=now()  WHERE id=#{id}
+    </select>
+
+    <!--随机取试题信息-->
+    <select id="listRandomQuestion" resultType="Question">
+         select  qt.* FROM tb_question  qt,tb_question_know qtk
+         WHERE qt.question_type_id=#{questionTypeId} and qt.id=qtk.question_id
+        AND qt.check_status='2' AND qt.status='1' AND qtk.know_id in(
+
+         <foreach collection="knowIdList" item="l" index="index" separator=",">
+             #{l}
+        </foreach>
+         )
+         GROUP BY qt.id  order by RAND() LIMIT #{number}
+    </select>
+
+    <!--添加试题-->
+    <insert id="addQuestion" parameterType="Question">
+        INSERT INTO tb_question(
+        id,
+        name,
+        question_type_id,
+        subject_id,
+        context_path,
+        <if test="difficulty!=null and difficulty!=''">
+            difficulty,
+        </if>
+        <if test="resource!=null and resource!=''">
+            resource,
+        </if>
+        <if test="keyword!=null and keyword!=''">
+            keyword,
+        </if>
+        <if test="checkStatus!=null and checkStatus!=''">
+            check_status,
+        </if>
+        <if test="remark!=null and remark!=''">
+            remark,
+        </if>
+            STATUS,
+            creater,
+            create_time
+        )
+        VALUES (
+        #{id},
+        #{name},
+        #{questionTypeId},
+        #{subjectId},
+        #{contextPath},
+        <if test="difficulty!=null and difficulty!=''">
+            #{difficulty},
+        </if>
+        <if test="resource!=null and resource!=''">
+            #{resource},
+        </if>
+        <if test="keyword!=null and keyword!=''">
+            #{keyword},
+        </if>
+        <if test="checkStatus!=null and checkStatus!=''">
+            #{checkStatus},
+        </if>
+
+        <if test="remark!=null and remark!=''">
+            #{remark},
+        </if>
+         '1',
+         #{creater},
+         now()
+        )
+    </insert>
+
+
+    <!--根据试卷ID查询-->
+    <select id="listQuestionByPaperId" resultType="Question">
+        SELECT <include refid="baseSql"/> FROM tb_question WHERE id in(
+                SELECT question_id FROM tb_section_question WHERE section_id in(
+                        SELECT id FROM tb_section WHERE paper_id=#{paperId}
+                )
+        )  ORDER  BY create_time desc
+    </select>
+
+    <!--软删除试题资源-->
+    <update id="delQuestion" parameterType="Question">
+        UPDATE tb_question SET status=#{status},modifier=#{modifier},modify_time=now() WHERE id=#{id}
+    </update>
+
+    <!--复制题目信息-->
+    <insert id="copyQuestionByQuestionId">
+        INSERT INTO tb_question(
+            id,
+            NAME,
+            question_type_id,
+            subject_id,
+            context_path,
+            difficulty,
+            resource,
+            keyword,
+            check_status,
+            STATUS,
+            remark,
+            creater,
+            create_time
+        )
+        SELECT
+            #{newquestionId},
+            NAME,
+            question_type_id,
+            subject_id,
+            #{contextPath},
+            difficulty,
+            resource,
+            keyword,
+            '1',
+            STATUS,
+            remark,
+            #{creater},
+            now()
+        FROM tb_question WHERE id=#{id}
+    </insert>
+
+    <!-- 跟据大题查询试题列表 -->
+    <select id="listQuestionBySectionId" parameterType="Question" resultType="Question">
+        SELECT
+           q.id,
+           q.name,
+           q.question_type_id,
+           q.subject_id,
+           q.context_path,
+           q.difficulty,
+           q.resource,
+           q.keyword,
+           q.check_status,
+           q.status,
+           sq.sort,
+           (select t.type FROM tb_question_type t where q.question_type_id = t.id) as type
+        FROM tb_question q,tb_section_question sq
+        WHERE q.id = sq.question_id
+        AND q.status = '1'
+        AND sq.section_id = #{sectionId}
+        ORDER  BY sq.sort ASC
+    </select>
+
+    <!--根据科目ID获取题目信息-->
+    <select id="getQuestionsBySubjectId" resultType="Question">
+        SELECT <include refid="baseSql"/> from tb_question
+        WHERE subject_id=#{subjectId} AND status=1
+    </select>
+
+    <!--根据题型ID获取题目信息-->
+    <select id="getQuestionsByTypeId" resultType="Question">
+        SELECT <include refid="baseSql"/> FROM tb_question
+        WHERE question_type_id=#{questionTypeId} AND status=1
+    </select>
+</mapper>

@@ -1,0 +1,155 @@
+#parse("/header.html")
+<link href="/static/css/paper.css" rel="stylesheet">
+<link href="/static/css/question.css" rel="stylesheet">
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl" style="margin-top: 60px;">
+    <div class="top-panel">
+        <div class="title">
+            新增试卷
+        </div>
+        <div class="button-panel" style="margin-bottom:5px;">
+            <input type="button" class="btn common-btn save-btn keep" ng-click="addPaper()" value="保存">
+            <button type="button" class="btn common-btn" data-dismiss="modal" style="width:70px;" ng-click="goto()">返回</button>
+        </div>
+    </div>
+    <form class="step-first" id="stepFirst">
+        <div class="fom-child fd-l" style="margin-top:0;">
+            <label class="required">试卷名称:</label>
+            <input type="text" ng-model="paperName" name="paperName" class="common-input"/>
+        </div>
+        <div class="fom-child zw-b">
+            <label class="required">所属科目:</label>
+            <select name="subjectId" class="select-ft" ng-model="subjectId" ng-change="getSubjectVal()">
+                <option value="" >请选择</option>
+                <option ng-repeat="subject in subjectList" value="{{subject.id}}" >{{subject.name}}</option>
+            </select>
+        </div>
+        <div class="fom-child fd-l" >
+            <label class="required">卷面总分:</label>
+            <input name="scores" ng-model="totalScore" type="text" class="common-input"/><bm>分</bm>
+        </div>
+        <div class="fom-child zw-b">
+            <label class="required">及格分数:</label>
+            <input name="passScroe" ng-model="passScore" type="text" class="common-input"/><bm>分</bm>
+        </div>
+        <div class="select-ma fom-auto fd-l">
+            <label class="required auto-la">知识点分类:</label>
+            <div>
+                <select name="knowledgeId"  id="knowledgeId" multiple="multiple">
+                    <option ng-repeat="knowledge in knowledgeList" value="{{knowledge.id}}">{{knowledge.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="fom-child zw-b">
+            <label class="required">考试时长:</label>
+            <input type="text" name="paperTimes" ng-model="paperTimes" class="common-input"/><bm>（分钟）</bm>
+        </div>
+        <div class="tree-body select-ma" style="">
+            <hr>
+            <div class="addtypes">
+                <label class="required">题型设置：</label>
+                <span style="margin-left:1%;">
+                <bm>当前已添加了 </bm><label>0</label><bm> 个题型</bm>
+                <bm>,共 </bm><label>0</label><bm> 小题，题目分数合计</bm>
+                <label>0</label><bm> 分。</bm>
+                </span>
+                <span class="add-ty font-show"><img src="/static/images/addType.png"> 添加题型</span>
+                <hr>
+            </div>
+            <!--该div始终隐藏，用于缓存小题展示区域！-->
+            <div class="next-tree section-template-panel" >
+                <em class="secTop">第一题： </em>
+            <select name="questionType"  class="select-ft">
+                <option value="" >请选择</option>
+                <option ng-repeat="obj in questionType" value="{{obj.id}}" >{{obj.name}}</option>
+            </select>
+                <bm> 共 </bm><input type="text" ng-model="quesNum" name="questionNum" class="common-input input-child queNum type-input" /><bm> 题</bm>
+                <bm> 每小题</bm><input type="text" ng-model="xquesScore" name="questionScore" class="common-input input-child queScore type-input" /><bm> 分</bm>
+                <span class="font-show bu-f que-self">自动选题</span>
+                <span class="font-show bu-s add-ques">添加题目</span>
+                <span class="font-show bu-s clean-que">清除题目</span>
+                <span class="font-show bu-s del-ty">删除题型</span>
+                <div class="tree-list">
+                    <div class="tree-first">
+                        <textarea class="text-que">题干说明</textarea>
+                    </div>
+                    <div class="tree-pr">
+
+                    </div>
+                    <hr style="margin-left:2%;">
+                </div>
+            </div>
+            <div class="next-elder">
+
+            </div>
+        </div>
+    </form>
+    <!--查看详情 modal-->
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">添加题目</h4>
+                </div>
+                <form class="modal-sel" id="searchForm">
+                    <select name="subjectId" id="subjectId"  ng-model="modalSubjectId" ng-change="getSubjectVal()">
+                        <option value="" >请选择</option>
+                        <option ng-repeat="subject in subjectList" value="{{subject.id}}" >{{subject.name}}</option>
+                    </select>
+                    <select name="questionTypeId" ng-model="modalTypeId"  id="questionTypeId">
+                        <option value="" >请选择</option>
+                        <option ng-repeat="obj in questionType" value="{{obj.id}}" >{{obj.name}}</option>
+                    </select>
+                    <input type="text" name="keyword" class="common-input" placeholder="关键字模糊查询"/>
+                    <button type="button" class="btn common-btn search-btn">查询</button>
+                </form>
+                <div class="modal-body">
+                    <div class="question-list">
+
+                    </div>
+                    <page model="modelEntrys" ajaxurl="/question/pageQuestion" autoinit="false"  formid="searchForm"></page>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn common-btn" ng-click="handGroup()" >确定</button>
+                    <button type="button" class="btn common-btn" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- modal-end -->
+    <!-- 试题展示层模板 -->
+    <div class="question-unit" style="width: 100%;display: none;" id="questionTempPanel">
+        <div class="row question-info">
+            <div class="col-xs-8">
+                <label>题号 : <span class="question-num"></span></label>
+                <label style="margin-left: 30px;">题型 : <span class="question-type"></span></label>
+                <label style="margin-left: 30px;">难度 : <span class="question-dif"></span></label>
+            </div>
+            <div class="col-xs-4 text-right">
+                <label><input type="checkbox" id=""  value="" class="question-checkbox"></label>
+            </div>
+            <div class="col-xs-8" style="margin-top: 10px;">
+                <label>来源 : <span class="question-res"></span></label>
+            </div>
+            <div class="col-xs-4 text-right" style="margin-top: 10px;">
+                <label >创建时间 : <span class="create-time"></span></label>
+            </div>
+        </div>
+        <div class="row question-content">
+        </div>
+    </div>
+    <!-- 试题展示层模板-end -->
+    <!-- 提示模态框（Modal） -->
+    <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:60%;">
+            <div id="myAlert" class="alert alert-warning" >
+                <a href="#" class="close" data-dismiss="alert">
+                    &times;
+                </a>
+                <strong>警告！</strong>您未勾选题目，请勾选后再点击保存，需关闭选题窗口可点击相关关闭按钮！
+            </div>
+        </div>
+    </div>
+        <!-- .modal -->
+</div>
+#parse("/footer.html")
+<script src="/static/js/paper/paper.add.js"></script>

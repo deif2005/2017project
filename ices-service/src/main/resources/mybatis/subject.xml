@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.ISubjectDao">
+
+    <sql id="baseSql">
+        id,name,status,remark,creater,concat(create_time,'') as create_time,modifier,concat(modify_time,'') as modify_time
+    </sql>
+
+    <!--分页查询科目信息-->
+    <select id="pageSubject" resultType="Subject">
+        SELECT <include refid="baseSql"/> from tb_subject WHERE status=#{status} order by  create_time desc LIMIT #{statsPage},#{endPage}
+    </select>
+
+    <!--查询科目信息-->
+    <select id="listSubject" resultType="Subject">
+        SELECT <include refid="baseSql"/> from tb_subject WHERE status=#{status} order by  create_time desc
+    </select>
+
+    <!--根据id查询科目信息-->
+    <select id="getSubjectById" resultType="Subject">
+        SELECT
+          <include refid="baseSql"/>
+        FROM tb_subject where id=#{id}
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <!--统计科目数量-->
+    <select id="countSubject" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_subject WHERE status=#{status}
+    </select>
+
+    <!--添加科目信息-->
+    <insert id="insertSubject" parameterType="Subject">
+        INSERT INTO tb_subject (id,name,
+        <if test="remark!=null and remark!=''">
+            remark,
+        </if>
+            status,creater,create_time
+        )
+        VALUES(
+        #{id},#{name},
+        <if test="remark!=null and remark!=''">
+             #{remark},
+        </if>
+             '1',#{creater},now()
+        )
+    </insert>
+
+    <!--修改科目信息-->
+    <update id="updateSubjectById" parameterType="Subject">
+          UPDATE  tb_subject
+          SET modifier=#{modifier} , modify_time = now()
+          <if test="name!=null and name!=''">
+                ,name=#{name}
+          </if>
+              ,remark=#{remark,jdbcType=VARCHAR}
+          <if test="status!=null and status!=''">
+            ,status=#{status}
+          </if>
+         WHERE id=#{id}
+    </update>
+
+    <!--修改科目信息-->
+    <update id="deleteSubjectById" parameterType="Subject">
+        UPDATE  tb_subject  SET status=#{status} ,modifier=#{modifier} , modify_time = now()  WHERE id=#{id}
+    </update>
+
+    <!--根据名ID或称统计-->
+    <select id="countByName" parameterType="Subject" resultType="java.lang.Integer">
+        SELECT  count(*) FROM  tb_subject WHERE name=#{name} AND status='1'
+    </select>
+
+</mapper>

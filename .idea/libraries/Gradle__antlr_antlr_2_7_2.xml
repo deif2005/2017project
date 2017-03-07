@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: antlr:antlr:2.7.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tools/gradle-1.12/caches/modules-2/files-2.1/antlr/antlr/2.7.2/546b5220622c4d9b2da45ad1899224b6ce1c8830/antlr-2.7.2.jar!/" />
+      <root url="jar://E:/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.2/546b5220622c4d9b2da45ad1899224b6ce1c8830/antlr-2.7.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tools/gradle-1.12/caches/modules-2/files-2.1/antlr/antlr/2.7.2/b89cfcdcb699c972f9a6a0cdf333a3f39ed33306/antlr-2.7.2-sources.jar!/" />
+      <root url="jar://E:/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.2/b89cfcdcb699c972f9a6a0cdf333a3f39ed33306/antlr-2.7.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <description>sop dubbo 服务提供配置 </description>
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="zyj-marktaskpool"  />
+    <!-- 注册中心暴露服务地址 -->
+    <!--<dubbo:registry address="zookeeper://10.172.7.71:2181" />-->
+    <!-- <dubbo:registry address="${dubbo_zk_url}" file="/tmp/dubbo.cache"/> -->
+    <!--  <dubbo:registry  protocol="zookeeper"  address="192.168.10.42:2181" />-->
+     <dubbo:registry  protocol="zookeeper"  address="127.0.0.1:2181" />
+
+     <dubbo:protocol port="-1"/>
+
+     <!-- 注册中心暴露服务地址 -->
+    <!--<dubbo:registry address="zookeeper://10.172.7.71:2181" />-->
+
+</beans>

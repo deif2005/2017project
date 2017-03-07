@@ -1,0 +1,126 @@
+#parse("/header.html")
+<link href="/static/css/question.css" rel="stylesheet">
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl">
+    <form id="searchForm"  class="form-horizontal">
+        <div class="row">
+            <div class="col-xs-8 text-left" style="padding-left:25px;">
+                科目 <select name="subjectId" class="subject-select">
+                    <option value="">--全部--</option>
+                    #foreach($sub in $subList)
+                         <option value="$sub.id">$sub.name</option>
+                    #end
+                </select>
+                题型 <select name="questionTypeId" class="type-select" style="width: 100px;">
+                    <option value="">--全部--</option>
+                    <option value="{{type.id}}" ng-repeat="type in questionType">{{type.name}}</option>
+                </select>
+                审核状态 <select name="checkStatus" class="status-select" style="width: 100px;">
+                            <option value="">--全部--</option>
+                            <option value="1">未审核</option>
+                            <option value="2">已审核</option>
+                        </select>
+            </div>
+            <div class="col-xs-4 pull-right text-right" style="padding-right:25px;">
+                <button class="btn common-btn" ng-click = "addQuestion()">添加试题</button>
+                <button class="btn common-btn" ng-click = "uploadResource()">导入试题资源</button>
+            </div>
+        </div>
+    </form>
+    <div class="row table-div" style="width: 100%;margin-left: 0px;">
+       <div class="question-list">
+
+       </div>
+        <page model="modelEntrys" ajaxurl="/question/pageQuestion" formid="searchForm"></page>
+    </div>
+    <!--预览 modal-->
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <input type="hidden" value="{{questionId}}" id="questionId">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">试题预览</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn common-btn" ng-if="checkStatus == '1'" ng-click="updateCheckStatus('pass')">审核通过</button>
+                    <button type="button" class="btn common-btn" ng-if="checkStatus == '2'" ng-click="updateCheckStatus('cancel')">重新审核</button>
+                    <button type="button" class="btn common-btn" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal-end -->
+    <!--导入试题资源 modal-->
+    <div class="modal fade" id="uploadResourceModal" tabindex="-1" role="dialog" aria-hidden="false" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">导入试题资源</h4>
+                </div>
+                <div class="modal-body" style="height: 200px;padding: 20px;">
+                    <form class="form-horizontal" id="uploadForm" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="required col-xs-2 text-right">所属科目</label>
+                            <div class="col-xs-9">
+                                <select name="subjectId">
+                                    <option ng-repeat="subject in subjectList" value="{{subject.id}}">{{subject.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 text-right">资源文件</label>
+                            <div class="col-xs-10">
+                                <input id="fileId" type="file" accept="aplication/zip" name="file"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-10">
+                                <label class="col-xs-2"></label>
+                                <span class="file-error" style="color: #FF0000;">提示：目前仅支持导入zip格式的试题资源</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn common-btn" ng-click="uploadFile()" id="uploadFileBtn">确定</button>
+                    <button type="button" class="btn common-btn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal-end -->
+    <!-- 试题展示层模板 -->
+        <div class="question-unit" style="width: 100%;display: none;" id="questionTempPanel">
+            <div class="row question-info">
+                <div class="col-xs-8">
+                    <label>题号 : <span class="question-num"></span></label>
+                    <label style="margin-left: 30px;">题型 : <span class="question-type"></span></label>
+                    <label style="margin-left: 30px;">难度 : <span class="question-dif"></span></label>
+                    <label style="margin-left: 30px;">关键字 : <span class="question-keyword"></span></label>
+                </div>
+                <div class="col-xs-4 text-right">
+                    <span class="question-opt modify-opt">修改</span>
+                    <span class="question-opt copy-opt">复制</span>
+                    <span class="question-opt preview-opt">预览</span>
+                    <span class="question-opt delete-opt">删除</span>
+                </div>
+                <div class="col-xs-8" style="margin-top: 10px;">
+                    <label>来源 : <span class="question-res"></span></label>
+                </div>
+                <div class="col-xs-4 text-right" style="margin-top: 10px;">
+                    <label >创建时间 : <span class="create-time"></span></label>
+                </div>
+            </div>
+            <div class="row question-content" style="padding-left: 12px;word-break: break-all;word-wrap:break-word;">
+
+            </div>
+        </div>
+    <!-- 试题展示层模板-end -->
+</div>
+#parse("/footer.html")
+<script src="/static/js/jquery.form.js"></script>
+<script src="/static/js/question/question.list.js"></script>

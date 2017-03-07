@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.IUserDao">
+    <!-- 获取用户信息 -->
+    <select id="getUser" resultType="User">
+        SELECT
+        id,
+        account,
+        password,
+        name,
+        phone,
+        status,
+        remark,
+        last_time
+        FROM tb_user
+        WHERE status = '1'
+        <if test="id !=null and id != ''">
+            AND id = #{id}
+        </if>
+        <if test="account !=null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="password !=null and password != ''">
+            AND password = #{password}
+        </if>
+    </select>
+
+    <!--根据id修改用户信息-->
+    <update id="updateUserById" parameterType="UserEditRequest">
+        UPDATE tb_user
+        SET modify_time = now()
+        <if test="account!=null and account!=''">
+            ,account = #{account}
+        </if>
+        <if test="newPassword!=null and newPassword!=''">
+            ,password = #{newPassword}
+        </if>
+        <if test="name!=null and name!=''">
+            ,name = #{name}
+        </if>
+        <if test="phone!=null and phone!=''">
+            ,phone = #{phone}
+        </if>
+        <if test="status!=null and status!=''">
+            ,status = #{status}
+        </if>
+        <if test="remark!=null and remark!=''">
+            ,remark = #{remark}
+        </if>
+        <if test="lastTime!=null and lastTime!=''">
+            ,last_time = #{lastTime}
+        </if>
+        <if test="modifier!=null and modifier!=''">
+            ,modifier = #{modifier}
+        </if>
+         WHERE id=#{id}
+    </update>
+</mapper>

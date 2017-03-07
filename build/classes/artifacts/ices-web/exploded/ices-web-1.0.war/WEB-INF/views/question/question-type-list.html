@@ -1,0 +1,79 @@
+#parse("/header.html")
+<div class="container"  ng-app="modelApp" ng-controller="modelListCtrl">
+   <!-- <div class="row">
+        <div class="col-xs-6 pull-right" style="text-align: right;">
+            <button class="btn common-btn" ng-click="addQuestion()">添加题型</button>
+        </div>
+    </div>-->
+    <form id="searchForm">
+        <div class="row">
+            <div class="col-xs-12 text-left">
+                科目 <select name="subjectId" class="subject-select">
+                        <option value="">--全部--</option>
+                        #foreach($sub in $subList)
+                            <option value="$sub.id">$sub.name</option>
+                        #end
+                    </select>
+            </div>
+
+        </div>
+    </form>
+    <div class="row table-div">
+        <table class="table table-bordered table-long">
+            <thead>
+                <th style="width: 6%;">序号</th>
+                <th style="width: 20%;">题目类别</th>
+                <th style="width: 20%;">题目名称</th>
+                <th style="width: 34%;">备注说明</th>
+                <th style="width: 20%;">创建时间</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="obj in modelEntrys.bizData.rows" data-id="{{obj.id}}">
+                    <td>{{modelEntrys.bizData.pagesize*(modelEntrys.bizData.page-1)+$index+1}}</td>
+                    <td>{{obj.type | getTypeStr}}</td>
+                    <td>{{obj.name}}</td>
+                    <td>{{obj.remark}}</td>
+                    <td>{{obj.createtime}}</td>
+                </tr>
+                <tr ng-if="modelEntrys.bizData.rows == 0">
+                    <td colspan="5" style="text-align: center;height: 60px;vertical-align: middle;font-size: 16px;">没有找到相关数据</td>
+                </tr>
+            </tbody>
+        </table>
+        <page model="modelEntrys" ajaxurl="/questiontype/queryQuestionType" formid="searchForm"></page>
+    </div>
+</div>
+#parse("/footer.html")
+<script>
+    var modelApp = angular.module('modelApp', []);
+    //初始化分页插件
+    MY.page.render(modelApp);
+    modelApp.filter('getTypeStr', function() {
+        return function(input) {
+            var str = "";
+            if(input == '1') {
+                str = '主观题';
+            }else if(input == '2') {
+                str = '客观题';
+            }
+            return str;
+        };
+    });
+    modelApp.controller('modelListCtrl', function ($scope) {
+        //科目改变事件
+        $('#searchForm').on('change','.subject-select',function() {
+            var subjectId = $(this).val();
+            var ajax1 = MY.ajax({
+                url:'/questiontype/queryQuestionType',
+                type:'post',
+                data:{subjectId:subjectId,page:1}
+            }).done(function(data) {
+                if(data.rtnCode == '000000') {
+                    $scope.$apply(function() {
+                        MY.page.init('modelEntrys',data);
+                    });
+                }
+            });
+        });
+    });
+</script>

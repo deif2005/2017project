@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingyu.ices.dao.IKnowledgeDao">
+
+    <sql id="baseSql">
+        id,name,subject_id,status,remark,creater,create_time,modifier,modify_time
+    </sql>
+
+    <!--分页查询知识列表-->
+    <select id="pageKnowledge" resultType="KnowledgeResponse">
+          SELECT
+            kl.id,
+            kl.name,
+            kl.subject_id,
+            kl.status,
+            kl.remark,
+            kl.creater,
+            concat(kl.create_time,'') as create_time,
+            sj.name AS subjectname
+          FROM tb_knowledge kl,tb_subject sj
+          WHERE kl.status=#{status}  and sj.id=kl.subject_id
+          <if test="subjectId!=null and subjectId!=''">
+            AND  subject_id= #{subjectId}
+          </if>
+          ORDER  BY kl.create_time desc
+          LIMIT #{statsPage},#{endPage}
+    </select>
+
+    <!--查询知识列表-->
+    <select id="listKnowledge" resultType="Knowledge">
+        SELECT <include refid="baseSql"/> FROM tb_knowledge WHERE status=#{status} order by  create_time desc
+    </select>
+
+    <!--根据id查询知识点信息-->
+    <select id="getKnowledgeById" resultType="Knowledge">
+        SELECT <include refid="baseSql"/> FROM tb_knowledge WHERE id=#{id} AND status='1'
+    </select>
+
+    <!--统计知识点数量-->
+    <select id="countKnowledge" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_knowledge WHERE status=#{status}
+        <if test="subjectId!=null and subjectId!=''">
+            AND subject_id=#{subjectId}
+        </if>
+    </select>
+
+    <!--添加知识点-->
+    <insert id="insertKnowledge">
+        INSERT INTO tb_knowledge (
+        <if test="id!=null and id!=''">
+            id
+        </if>
+        <if test="name!=null and name!=''">
+         , name
+        </if>
+        <if test="subjectId!=null and subjectId!=''">
+        ,subject_id
+        </if>
+        ,status
+        ,remark
+
+        <if test="creater!=null and creater!=''">
+        ,creater
+        </if>
+        ,create_time
+        )
+        VALUES (
+        <if test="id!=null and id!=''">
+            #{id}
+        </if>
+        <if test="name!=null and name!=''">
+            , #{name}
+        </if>
+        <if test="subjectId!=null and subjectId!=''">
+            ,#{subjectId}
+        </if>
+             ,'1'
+            ,#{remark,jdbcType=VARCHAR}
+
+        <if test="creater!=null and creater!=''">
+            ,#{creater}
+        </if>
+        ,now()
+        )
+    </insert>
+
+    <!--修改知识点-->
+    <update id="updateKnowledge" parameterType="Knowledge">
+        UPDATE tb_knowledge
+        SET
+        modify_time=now()
+        <if test="name!=null and name!=''">
+            ,name=#{name}
+        </if>
+        <if test="subjectId!=null and subjectId!=''">
+            ,subject_id=#{subjectId}
+        </if>
+        <if test="status!=null and status!=''">
+            ,status=#{status}
+        </if>
+
+            ,remark=#{remark,jdbcType=VARCHAR}
+
+        <if test="modifier!=null and modifier!=''">
+            ,modifier=#{modifier}
+        </if>
+        WHERE id=#{id}
+    </update>
+
+    <!--根据试卷知识点关系表查询知识点-->
+    <select id="listKnowLedgeByPaperKnow" resultType="Knowledge">
+        SELECT * FROM tb_knowledge WHERE id in (
+              select know_id FROM tb_paper_know WHERE paper_id=#{id})
+    </select>
+
+    <!--根据科目ID查询知识点-->
+    <select id="listKnowledgeBySubjectId" resultType="Knowledge">
+        SELECT <include refid="baseSql"/>  FROM tb_knowledge
+        WHERE status=#{status} AND subject_id=#{subjectId} ORDER  BY create_time
+    </select>
+
+    <!--删除知识点-->
+    <update id="delKnowledge">
+        UPDATE tb_knowledge SET
+        status=#{status},
+        modify_time=now()
+        <if test="modifier!=null and modifier!=''">
+            ,modifier=#{modifier}
+        </if>
+        WHERE subject_id=#{subjectId}
+    </update>
+
+    <!--根据名ID或称统计-->
+    <select id="countByName" parameterType="Knowledge" resultType="java.lang.Integer">
+        SELECT count(*) FROM tb_knowledge WHERE
+         subject_id=#{subjectId} AND name=#{name} AND status='1'
+    </select>
+
+</mapper>
