@@ -133,6 +133,7 @@ public class QuestionController extends BaseController{
         }
         return paperBizDataPage;
     }
+
     /**
      * 上传试题资源
      * @param request
@@ -141,19 +142,28 @@ public class QuestionController extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "/uploadResource", method = RequestMethod.POST)
-    public StringWrapper uploadResource(HttpServletRequest request,String subjectId) {
+    public List uploadResource(HttpServletRequest request,String subjectId) {
+        List<String> resultList = new ArrayList<>();
         String filePath = null;
+        String showPath = "";
+        String fileName = "";
         try {
-            //读取zk中配置的试题资源上传路径
-            String uploadPath = SystemConfig.getQuestionResourceUploadPath();
-            //上传压缩文件
-            filePath = super.uploadFile(request,uploadPath + subjectId +"/").getFirstFile();
-            //读取zk中配置的文件规则
+            String uploadPath = SystemConfig.getQuestionResourceUploadPath()+ subjectId +"/";
+            String baseShowPath = SystemConfig.getStaticShowPath();
             String fileRule = SystemConfig.getQuestionResourceUploadRule();
+            //上传压缩文件
+            UploadFileResponse uploadFileResponse = super.uploadFile(request,uploadPath);
+            String OriginalFilename = uploadFileResponse.getFirstFileName();
+            filePath = uploadFileResponse.getFirstFile();
             //解压缩文件并检查文件格式
             ZipUtil.unZip(filePath, null, fileRule);
             //删除压缩包文件
             FileUtil.deleteFile(filePath);
+            fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+            //文件展示路径
+            showPath = baseShowPath + uploadPath + fileName;
+            resultList.add(showPath);
+            resultList.add(OriginalFilename);
         } catch (BizException be){
             //业务异常，删除上传的压缩包及文件夹
             if(StringUtils.isNotBlank(filePath)){
@@ -165,7 +175,7 @@ public class QuestionController extends BaseController{
             logger.error("QuestionContrller-uploadResource error：",e);
             throw new BizException(WebConstants.ERROR,"上传试题资源");
         }
-        return new StringWrapper("success");
+        return resultList;
     }
 
     /**
@@ -190,7 +200,7 @@ public class QuestionController extends BaseController{
             fileName = uploadFileResponse.getFirstFile();
             String OriginalFilename = uploadFileResponse.getFirstFileName();
             fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-            //读取zk中配置的文件展示路径
+            //文件展示路径
             showPath = baseShowPath + relPath + fileName;
             resultList.add(showPath);
             resultList.add(OriginalFilename);
