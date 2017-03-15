@@ -1,6 +1,12 @@
 function Music() {
     this.init();
 }
+
+function selectMusicFile(obj){
+	
+	$G("J_searchName").value = obj.value;
+}
+
 (function () {
     var pages = [],
         panels = [],
@@ -10,17 +16,18 @@ function Music() {
         pageSize:10,
         dataUrl:"http://tingapi.ting.baidu.com/v1/restserver/ting?method=baidu.ting.search.common",
         playerUrl:"http://box.baidu.com/widget/flash/bdspacesong.swf",
-
+        
         init:function () {
             var me = this;
-            domUtils.on($G("J_searchName"), "keyup", function (event) {
+            /*domUtils.on($G("J_searchName"), "keyup", function (event) {
                 var e = window.event || event;
                 if (e.keyCode == 13) {
                     me.dosearch();
                 }
-            });
+            });*/
             domUtils.on($G("J_searchBtn"), "click", function () {
-                me.dosearch();
+                //me.dosearch();
+            	$G("musicFile").click();
             });
         },
         callback:function (data) {
@@ -177,10 +184,14 @@ function Music() {
         },
         exec:function () {
             var me = this;
-            if (selectedItem == null)   return;
+            if($G("J_searchName").value == null){
+            	return;
+            }
+            //if (selectedItem == null)   return;
             $G('J_preview').innerHTML = "";
             editor.execCommand('music', {
-                url:me._getUrl(false),
+                //url:me._getUrl(false),
+            	url:"aaaaa",
                 width:400,
                 height:95
             });

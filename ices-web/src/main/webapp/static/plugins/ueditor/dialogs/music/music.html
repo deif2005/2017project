@@ -9,8 +9,10 @@
 <body>
 <div class="wrapper">
     <div class="searchBar">
+    	<input type="file" id="musicFile" onchange="selectMusicFile(this)" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;"/>
+    	
         <input id="J_searchName" type="text"/>
-        <input type="button" class="searchBtn" id="J_searchBtn">
+        <input type="button" class="searchBtn" id="J_searchBtn" />
     </div>
     <div class="resultBar" id="J_resultBar">
         <div class="loading" style="display:none"></div>

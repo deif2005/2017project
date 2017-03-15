@@ -23712,7 +23712,8 @@ UE.plugin.register('music', function (){
             'music':{
                 execCommand:function (cmd, musicObj) {
                     var me = this,
-                        str = creatInsertStr(musicObj.url, musicObj.width || 400, musicObj.height || 95, "none", false);
+                        //str = creatInsertStr(musicObj.url, musicObj.width || 400, musicObj.height || 95, "none", false);
+                    str = creatInsertStr(musicObj.url, 200, 35, "none", false);
                     me.execCommand("inserthtml",str);
                 },
                 queryCommandState:function () {
